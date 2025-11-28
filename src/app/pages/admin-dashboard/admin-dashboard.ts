@@ -8,6 +8,8 @@ interface User {
   email: string;
   password: string;
   role?: string;
+  phone?: string;
+  organization?: string;
 }
 
 @Component({
@@ -29,6 +31,8 @@ export class AdminDashboard implements OnInit {
   password = '';
   confirmPassword = '';
   role = 'organizer';
+  phone = '';
+  organization = '';
   isLoading = false;
 
   constructor(private router: Router) {}
@@ -113,6 +117,8 @@ export class AdminDashboard implements OnInit {
       email: this.email,
       password: this.password,
       role: this.role,
+      phone: this.phone,
+      organization: this.organization,
     };
 
     this.isLoading = true;
@@ -130,6 +136,8 @@ export class AdminDashboard implements OnInit {
       this.password = '';
       this.confirmPassword = '';
       this.role = 'organizer';
+      this.phone = '';
+      this.organization = '';
       this.showChoice('');
     }, 600);
   }

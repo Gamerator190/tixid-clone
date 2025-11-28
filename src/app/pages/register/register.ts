@@ -8,6 +8,8 @@ interface User {
   email: string;
   password: string;
   role?: string;
+  phone?: string;
+  organization?: string;
 }
 
 @Component({
@@ -23,6 +25,8 @@ export class RegisterComponent {
   password = '';
   confirmPassword = '';
   role = 'attendee';
+  phone = '';
+  organization = '';
   isLoading = false;
 
   constructor(private router: Router) {}
@@ -70,6 +74,8 @@ export class RegisterComponent {
       email: this.email,
       password: this.password,
       role: this.role,
+      phone: this.phone,
+      organization: this.organization,
     };
 
     this.isLoading = true;
