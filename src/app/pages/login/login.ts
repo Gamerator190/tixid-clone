@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   password: string;
+  role?: string;
 }
 
 @Component({
@@ -59,8 +60,15 @@ export class LoginComponent {
 
       alert(`Welcome, ${found.name}! (we will redirect to the Home page later)`);
 
-      // later if the home page is ready, you can:
-      this.router.navigate(['/home']);
+      const role = found.role || 'attendee';
+      if (role === 'organizer') {
+        this.router.navigate(['/dashboard']);
+      } else if (role === 'auditorium_admin') {
+        this.router.navigate(['/admin-dashboard']);
+      } else {
+        // later if the home page is ready, you can:
+        this.router.navigate(['/home']);
+      }
     }, 600);
   }
 
