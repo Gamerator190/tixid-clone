@@ -1,0 +1,281 @@
+.dashboard {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #ffffff, #ffffff);
+  color: #0F1939;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0F1939;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-title::before {
+  content: '⚙️';
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #516AC8;
+  margin: 0;
+}
+
+/* ACTION BUTTONS */
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.btn {
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #E3AF64, #FAEBD7);
+  color: #0F1939;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.2);
+  opacity: 0.96;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: #0F1939;
+  color: #E3AF64;
+}
+
+.btn-primary:hover {
+  background: #1a2a4a;
+}
+
+/* CARDS */
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(209, 213, 219, 0.8);
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0F1939;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* FORM GROUPS */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0F1939;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #0F1939;
+  background: #ffffff;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #E3AF64;
+  box-shadow: 0 0 0 3px rgba(227, 175, 100, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* FORM ROWS */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* DISCOUNT ROW */
+
+.discount-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.discount-row input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.discount-row span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0F1939;
+  padding: 10px 8px;
+}
+
+/* FORM ACTIONS */
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(209, 213, 219, 0.8);
+}
+
+.form-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.form-btn-submit {
+  background: linear-gradient(135deg, #E3AF64, #FAEBD7);
+  color: #0F1939;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+}
+
+.form-btn-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+}
+
+.form-btn-cancel {
+  background: #f3f4f6;
+  color: #0F1939;
+  border: 1px solid #d1d5db;
+}
+
+.form-btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+/* PLACEHOLDER CONTENT */
+
+.placeholder-content {
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.placeholder-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.placeholder-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 12px;
+  }
+
+  .header-title {
+    font-size: 20px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+}

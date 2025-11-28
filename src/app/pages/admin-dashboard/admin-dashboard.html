@@ -1,1 +1,149 @@
-<p>admin-dashboard works!</p>
+<div class="admin-dashboard">
+  <!-- TOP BAR HEADER -->
+  <header class="top-bar">
+    <div class="brand">
+      <div class="logo">PLAN<span>FUN</span></div>
+    </div>
+
+    <div class="top-actions">
+      <button class="notif-btn" type="button" title="Notifications">
+        🔔
+      </button>
+
+      <div class="user-pill" (click)="toggleUserMenu()">
+        <div class="avatar-wrap">
+          <div class="avatar-glow"></div>
+          <div class="avatar">{{ userName[0] || 'A' }}</div>
+        </div>
+
+        <div class="user-meta">
+          <div class="hello">Hi 👋</div>
+          <div class="name">{{ userName }}</div>
+        </div>
+
+        <div class="icon">
+          <span>▾</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROPDOWN USER MENU -->
+    <div class="user-menu" *ngIf="showMenu">
+      <div class="menu-item" (click)="logout()">Logout</div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="dashboard-content">
+    <!-- HEADER -->
+    <div class="dashboard-header">
+      <h1 class="content-title">Admin Dashboard</h1>
+      <p class="content-subtitle">Manage events, organizers, and system analytics</p>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+      <button class="btn" (click)="showChoice('analytics-reports')">
+        📊 Analytics Reports
+      </button>
+      <button class="btn" (click)="showChoice('register')">
+        ✅ Register a New User
+      </button>
+    </div>
+
+    <!-- ANALYTICS & REPORTS SECTION -->
+    @if(activeChoice === 'analytics-reports') {
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Analytics & Reports</h2>
+        
+        <div class="placeholder-content">
+          <div class="placeholder-icon">📈</div>
+          <p class="placeholder-text">Analytics dashboard coming soon</p>
+          <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
+            Real-time event metrics, ticket sales, and user engagement data will appear here
+          </p>
+        </div>
+
+        <div class="form-actions">
+          <button class="form-btn form-btn-cancel" type="button" (click)="showChoice('')">Close</button>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- REGISTER SECTION -->
+    @else if(activeChoice === 'register') {
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Register a New User</h2>
+        
+        <form (ngSubmit)="register()">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Name as per ID / identity"
+                [(ngModel)]="name"
+                name="name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="e.g., you@mail.com"
+                [(ngModel)]="email"
+                name="email"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Minimum 6 characters"
+                [(ngModel)]="password"
+                name="password"
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirm">Confirm Password</label>
+              <input
+                id="confirm"
+                type="password"
+                placeholder="Repeat your password"
+                [(ngModel)]="confirmPassword"
+                name="confirmPassword"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="role">Register as</label>
+            <select id="role" name="role" [(ngModel)]="role">
+              <option value="attendee">Attendee</option>
+              <option value="organizer">Event Organizer</option>
+              <option value="auditorium_admin">Auditorium Admin</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button class="form-btn form-btn-submit" type="submit" [disabled]="isLoading">
+              <span *ngIf="!isLoading">Create Account</span>
+              <span *ngIf="isLoading">Saving...</span>
+            </button>
+            <button class="form-btn form-btn-cancel" type="button" (click)="showChoice('')">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    }
+  </main>
+</div>
