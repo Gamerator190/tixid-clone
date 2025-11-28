@@ -10,27 +10,53 @@
     <h2 class="title">Login</h2>
     <p class="subtitle">Use your account to continue</p>
 
-    <form (ngSubmit)="login()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="e.g., you@mail.com"
-          [(ngModel)]="email"
-          name="email"
-        />
+    <form (ngSubmit)="usePhoneLogin ? login2() : login()">
+      <div *ngIf="!usePhoneLogin">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="e.g., you@mail.com"
+            [(ngModel)]="email"
+            name="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            [(ngModel)]="password"
+            name="password"
+          />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          placeholder="Enter your password"
-          [(ngModel)]="password"
-          name="password"
-        />
+      <div *ngIf="usePhoneLogin">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            placeholder="e.g., +62 812 3456 7890"
+            [(ngModel)]="phone"
+            name="phone"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            [(ngModel)]="password"
+            name="password"
+          />
+        </div>
       </div>
 
       <button class="primary-btn" type="submit" [disabled]="isLoading">
@@ -43,8 +69,8 @@
       <span>or</span>
     </div>
 
-    <button class="secondary-btn" type="button">
-      Login with phone number (dummy)
+    <button class="secondary-btn" type="button" (click)="usePhoneLogin = !usePhoneLogin">
+      {{ usePhoneLogin ? 'Use email instead' : 'Use phone number instead' }}
     </button>
 
     <p class="bottom-text">

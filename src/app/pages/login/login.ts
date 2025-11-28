@@ -8,6 +8,7 @@ interface User {
   email: string;
   password: string;
   role?: string;
+  phone?: string;
 }
 
 @Component({
@@ -20,6 +21,8 @@ interface User {
 export class LoginComponent {
   email = '';
   password = '';
+  phone = '';
+  usePhoneLogin = false;
   isLoading = false;
 
   constructor(private router: Router) {}
@@ -67,6 +70,43 @@ export class LoginComponent {
         this.router.navigate(['/admin-dashboard']);
       } else {
         // later if the home page is ready, you can:
+        this.router.navigate(['/home']);
+      }
+    }, 600);
+  }
+
+  // Login by phone number
+  login2() {
+    if (!this.phone || !this.password) {
+      alert('Phone number and password are required!');
+      return;
+    }
+
+    this.isLoading = true;
+
+    setTimeout(() => {
+      const users = this.getUsersFromStorage();
+      const found = users.find(
+        (u) => u.phone === this.phone && u.password === this.password
+      );
+
+      this.isLoading = false;
+
+      if (!found) {
+        alert('Phone number or password is incorrect / not registered.');
+        return;
+      }
+
+      localStorage.setItem('tix-current-user', JSON.stringify(found));
+
+      alert(`Welcome, ${found.name}!`);
+
+      const role = found.role || 'attendee';
+      if (role === 'organizer') {
+        this.router.navigate(['/dashboard']);
+      } else if (role === 'auditorium_admin') {
+        this.router.navigate(['/admin-dashboard']);
+      } else {
         this.router.navigate(['/home']);
       }
     }, 600);
