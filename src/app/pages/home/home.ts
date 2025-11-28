@@ -24,7 +24,6 @@ interface Movie {
   styleUrl: './home.css',
 })
 export class HomeComponent implements OnInit {
-
   userName = 'Guest';
   showMenu = false;
   userRole = '';
@@ -229,7 +228,7 @@ export class HomeComponent implements OnInit {
   }
 
   openNotifications() {
-    alert('Belum ada notifikasi baru 😊');
+    alert('There are no new notifications 😊');
   }
 
   goMovie(id: number) {

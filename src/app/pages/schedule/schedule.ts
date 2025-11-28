@@ -10,7 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './schedule.css',
 })
 export class ScheduleComponent implements OnInit {
-
   movie: any = null;
   selectedDateIndex = 0;
 
@@ -21,19 +20,19 @@ export class ScheduleComponent implements OnInit {
 
   // ✅ setiap index mewakili 1 tanggal (sesuai index
   // di this.dates)
-timesByDate: string[][] = [
-  ['09:00'], // Day 1
-  ['13:00'], // Day 2
-  ['13:45'], // Day 3
-  ['09:30'], // Day 4
-  ['12:45'], // Day 5
-  ['14:15'], // Day 6
-  ['08:30'], // Day 7
-];
+  timesByDate: string[][] = [
+    ['09:00'], // Day 1
+    ['13:00'], // Day 2
+    ['13:45'], // Day 3
+    ['09:30'], // Day 4
+    ['12:45'], // Day 5
+    ['14:15'], // Day 6
+    ['08:30'], // Day 7
+  ];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -60,11 +59,11 @@ timesByDate: string[][] = [
       const d = new Date(today);
       d.setDate(d.getDate() + i);
       this.dates.push(
-        d.toLocaleDateString('id-ID', {
+        d.toLocaleDateString('en-US', {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
-        })
+        }),
       );
     }
 
