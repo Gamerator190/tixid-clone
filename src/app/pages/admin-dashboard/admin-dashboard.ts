@@ -28,7 +28,7 @@ export class AdminDashboard implements OnInit {
   email = '';
   password = '';
   confirmPassword = '';
-  role = 'attendee';
+  role = 'organizer';
   isLoading = false;
 
   constructor(private router: Router) {}
@@ -60,6 +60,14 @@ export class AdminDashboard implements OnInit {
   logout() {
     localStorage.removeItem('tix-current-user');
     this.router.navigate(['/login']);
+  }
+
+  goHome() {
+    this.router.navigate(['/home']);
+  }
+
+  openNotifications() {
+    alert('Belum ada notifikasi baru 😊');
   }
 
   private getUsersFromStorage(): User[] {
@@ -121,7 +129,7 @@ export class AdminDashboard implements OnInit {
       this.email = '';
       this.password = '';
       this.confirmPassword = '';
-      this.role = 'attendee';
+      this.role = 'organizer';
       this.showChoice('');
     }, 600);
   }

@@ -39,6 +39,7 @@
 
     <!-- DROPDOWN USER MENU -->
     <div class="user-menu" *ngIf="showMenu">
+      <div class="menu-item" *ngIf="userRole === 'auditorium_admin'" (click)="goAdmin()">Admin Dashboard</div>
       <div class="menu-item" (click)="logout()">Logout</div>
     </div>
   </header>

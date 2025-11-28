@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
 
   userName = 'Guest';
   showMenu = false;
+  userRole = '';
 
   constructor(public router: Router) {}
 
@@ -214,6 +215,7 @@ export class HomeComponent implements OnInit {
     try {
       const user = JSON.parse(userJson);
       this.userName = user.name || 'Movie Lover';
+      this.userRole = user.role || '';
     } catch {
       this.userName = 'Movie Lover';
     }
@@ -232,6 +234,10 @@ export class HomeComponent implements OnInit {
 
   goMovie(id: number) {
     this.router.navigate(['/movie', id]);
+  }
+
+  goAdmin() {
+    this.router.navigate(['/admin-dashboard']);
   }
 
   logout() {
