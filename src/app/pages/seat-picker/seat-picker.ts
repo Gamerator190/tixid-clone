@@ -14,7 +14,7 @@ export class SeatPickerComponent implements OnChanges {
   @Input() ticketCategories: any[] = [];
   @Input() seatConfiguration: any[] = [];
   @Output() goBackEvent = new EventEmitter<void>();
-  @Output() lanjutEvent = new EventEmitter<string>();
+  @Output() continueEvent = new EventEmitter<string>();
   @Input() showContinueButton: boolean = true;
 
   // LOWER FOYER: A–J (10 baris)
@@ -132,7 +132,7 @@ export class SeatPickerComponent implements OnChanges {
     return value.toLocaleString('id-ID');
   }
 
-  lanjut() {
+  continue() {
     if (!this.selectedSeats.length) {
       alert('Please choose at least 1 seat first, okay? 😊');
       return;
@@ -147,6 +147,6 @@ export class SeatPickerComponent implements OnChanges {
       })
       .join(',');
 
-    this.lanjutEvent.emit(seatData);
+    this.continueEvent.emit(seatData);
   }
 }

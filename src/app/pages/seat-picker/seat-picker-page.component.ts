@@ -8,7 +8,7 @@ import { SeatPickerComponent } from './seat-picker';
   standalone: true,
   imports: [CommonModule, SeatPickerComponent],
   templateUrl: './seat-picker-page.component.html',
-  styleUrls: ['./seat-picker-page.component.css']
+  styleUrls: ['./seat-picker-page.component.css'],
 })
 export class SeatPickerPageComponent implements OnInit {
   eventId!: number;
@@ -16,7 +16,10 @@ export class SeatPickerPageComponent implements OnInit {
   ticketCategories: any[] = [];
   seatConfiguration: any[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
@@ -38,7 +41,7 @@ export class SeatPickerPageComponent implements OnInit {
     this.router.navigate(['/event', this.eventId]);
   }
 
-  handleLanjut(seatData: string) {
+  handleContinue(seatData: string) {
     this.router.navigate(['/checkout', this.eventId, this.time, seatData]);
   }
 }
