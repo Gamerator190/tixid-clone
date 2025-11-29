@@ -34,7 +34,9 @@
     </div>
 
     <h3 class="subtitle">EVENT DESCRIPTION</h3>
-    <p class="synopsis">{{ event.synopsis || 'There is no description for this event yet.' }}</p>
+    <p class="description">
+      {{ event.description || 'There is no description for this event yet.' }}
+    </p>
 
     <button class="buy-btn" (click)="beliTiket()">View Schedule & Event List</button>
   </div>

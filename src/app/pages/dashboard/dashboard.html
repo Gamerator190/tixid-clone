@@ -142,18 +142,76 @@
 
         <div class="form-group">
           <label for="select-event">Select Event to Edit</label>
-          <select id="select-event" name="select-event">
-            <option value="">Choose an event...</option>
-            <option value="1">Summer Concert 2025</option>
-            <option value="2">Tech Conference</option>
-            <option value="3">Film Festival</option>
+          <select
+            id="select-event"
+            name="select-event"
+            [(ngModel)]="selectedEventId"
+            (change)="onEventSelect($event)"
+          >
+            <option [value]="null">Choose an event...</option>
+            <option *ngFor="let event of userEvents" [value]="event.id">{{ event.title }}</option>
           </select>
         </div>
 
+        @if (!selectedEventId) {
         <div class="placeholder-content">
           <div class="placeholder-icon">📝</div>
           <p class="placeholder-text">Select an event to begin editing</p>
         </div>
+        } @else {
+        <div class="card-subtitle">Add Ticket Types</div>
+        <div *ngFor="let category of ticketCategories; let i = index" class="category-form-row">
+          <div class="form-group">
+            <label>Category Name</label>
+            <input
+              type="text"
+              [(ngModel)]="category.name"
+              name="cat-name-{{i}}"
+              placeholder="e.g., General Admission"
+            />
+          </div>
+          <div class="form-group">
+            <label>Short Name</label>
+            <input
+              type="text"
+              [(ngModel)]="category.shortName"
+              name="cat-short-name-{{i}}"
+              placeholder="e.g., GEN"
+            />
+          </div>
+          <div class="form-group">
+            <label>Price (Rp)</label>
+            <input
+              type="number"
+              [(ngModel)]="category.price"
+              name="cat-price-{{i}}"
+              placeholder="e.g., 50000"
+            />
+          </div>
+          <button
+            type="button"
+            (click)="removeCategory(i)"
+            class="form-group form-btn-remove"
+            [disabled]="ticketCategories.length === 1"
+          >
+            Remove
+          </button>
+        </div>
+        <button type="button" (click)="addCategory()" class="form-btn-add">+ Add Category</button>
+
+        <!-- SEAT ROW CONFIGURATION -->
+        <div class="card-subtitle">Seat Row Configuration</div>
+        <div class="seat-config-grid">
+          <div *ngFor="let config of seatConfiguration" class="form-group">
+            <label>{{config.row}}</label>
+            <select [(ngModel)]="config.category" name="seat-row-{{config.row}}">
+              <option *ngFor="let cat of ticketCategories" [value]="cat.shortName">
+                {{cat.name}} ({{cat.shortName}})
+              </option>
+            </select>
+          </div>
+        </div>
+        }
 
         <div class="form-actions">
           <button class="form-btn form-btn-submit" type="button" (click)="submitForm()">

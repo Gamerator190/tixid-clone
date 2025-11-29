@@ -40,6 +40,6 @@ export class EventDetailComponent implements OnInit {
   }
 
   beliTiket() {
-    this.router.navigate(['/event', this.event.id, 'schedule']);
+    this.router.navigate(['/event', this.event.id, 'seats']);
   }
 }

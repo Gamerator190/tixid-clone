@@ -467,3 +467,61 @@ form .form-btn-submit {
     gap: 6px;
   }
 }
+
+.form-btn-add {
+  /* Inherit common form button styles */
+  padding: 8px 12px; /* Slightly smaller padding */
+  border-radius: 8px; /* Slightly smaller radius */
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  /* Specific styles for add button, similar to form-btn-submit */
+  background: linear-gradient(135deg, #e3af64, #faebd7);
+  color: #0f1939;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  border: none; /* No border for add button */
+  align-self: flex-start; /* Align to the start of the flex container */
+  margin-top: 10px; /* Some spacing from form rows */
+}
+
+.form-btn-add:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
+}
+
+.form-btn-add:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-btn-remove {
+  padding: 12px; /* Make it same size as other form buttons */
+  border-radius: 10px; /* Make it same size as other form buttons */
+  font-size: 13px; /* Make it same size as other form buttons */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  margin-left: 10px;
+}
+
+.form-btn-remove:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.form-btn-remove:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.category-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: end;
+  gap: 14px;
+}

@@ -25,12 +25,7 @@ export class SeatPickerComponent implements OnInit {
   seats: Seat[][] = [];
   selectedSeats: string[] = [];
 
-  priceTable: Record<string, number> = {
-    VIP: 65000,
-    REG: 45000,
-    SNR: 30000,
-    CHD: 25000,
-  };
+  priceTable: Record<string, number> = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -40,30 +35,49 @@ export class SeatPickerComponent implements OnInit {
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.time = String(this.route.snapshot.paramMap.get('time'));
-    this.generateSeats();
+
+    const eventsJson = localStorage.getItem('pf-events');
+    let categories: Record<string, string> = {};
+
+    if (eventsJson) {
+      const events = JSON.parse(eventsJson);
+      const currentEvent = events.find((event: any) => event.id === this.eventId);
+
+      if (currentEvent && currentEvent.ticketCategories && currentEvent.seatConfiguration) {
+        // Create price table from ticketCategories
+        this.priceTable = currentEvent.ticketCategories.reduce(
+          (acc: Record<string, number>, cat: any) => {
+            acc[cat.shortName] = cat.price;
+            return acc;
+          },
+          {},
+        );
+
+        // Create categories map from seatConfiguration
+        categories = currentEvent.seatConfiguration.reduce(
+          (acc: Record<string, string>, config: any) => {
+            acc[config.row] = config.category;
+            return acc;
+          },
+          {},
+        );
+      }
+    }
+
+    // Fallback to default if not configured
+    if (Object.keys(this.priceTable).length === 0) {
+      this.priceTable = { GEN: 25000 };
+    }
+    if (Object.keys(categories).length === 0) {
+      this.lowerRows.forEach((row) => (categories[row] = 'GEN'));
+      this.balconyRows.forEach((row) => (categories[row] = 'GEN'));
+    }
+
+    this.generateSeats(categories);
   }
 
-  generateSeats() {
+  generateSeats(categories: Record<string, string>) {
     this.seats = [];
-
-    const categories: Record<string, string> = {
-      A: 'VIP',
-      B: 'VIP',
-      C: 'REG',
-      D: 'REG',
-      E: 'REG',
-      F: 'REG',
-      G: 'REG',
-      H: 'REG',
-      I: 'SNR',
-      J: 'SNR',
-
-      AA: 'REG',
-      BB: 'REG',
-      CC: 'REG',
-      DD: 'SNR',
-      EE: 'CHD',
-    };
 
     // LOWER FOYER → 30 kursi per baris (10 kiri, 10 tengah, 10 kanan)
     for (const row of this.lowerRows) {
@@ -72,7 +86,7 @@ export class SeatPickerComponent implements OnInit {
         rowSeats.push({
           id: row + i,
           booked: Math.random() < 0.15,
-          type: categories[row] || 'REG',
+          type: categories[row] || 'GEN',
         });
       }
       this.seats.push(rowSeats);
@@ -85,7 +99,7 @@ export class SeatPickerComponent implements OnInit {
         rowSeats.push({
           id: row + i,
           booked: Math.random() < 0.15,
-          type: categories[row] || 'REG',
+          type: categories[row] || 'GEN',
         });
       }
       this.seats.push(rowSeats);
@@ -113,7 +127,7 @@ export class SeatPickerComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/event', this.eventId, 'schedule']);
+    this.router.navigate(['/event', this.eventId]);
   }
 
   get selectedSeatDetails() {

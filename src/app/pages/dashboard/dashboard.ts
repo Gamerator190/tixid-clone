@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { Router } from '@angular/router';
 
@@ -16,11 +17,13 @@ interface Event {
   isSpecial?: boolean;
   promoCode?: string;
   discount?: number;
+  ticketCategories?: { name: string; shortName: string; price: number }[];
+  seatConfiguration?: { row: string; category: string }[];
 }
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
@@ -34,6 +37,79 @@ export class Dashboard {
   // User properties
   userName = 'Organizer';
   showMenu = false;
+  userEvents: Event[] = [];
+  selectedEventId: number | null = null;
+
+  ticketCategories = [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
+  seatConfiguration = [
+    { row: 'A', category: 'GEN' },
+    { row: 'B', category: 'GEN' },
+    { row: 'C', category: 'GEN' },
+    { row: 'D', category: 'GEN' },
+    { row: 'E', category: 'GEN' },
+    { row: 'F', category: 'GEN' },
+    { row: 'G', category: 'GEN' },
+    { row: 'H', category: 'GEN' },
+    { row: 'I', category: 'GEN' },
+    { row: 'J', category: 'GEN' },
+    { row: 'AA', category: 'GEN' },
+    { row: 'BB', category: 'GEN' },
+    { row: 'CC', category: 'GEN' },
+    { row: 'DD', category: 'GEN' },
+    { row: 'EE', category: 'GEN' },
+  ];
+
+  onEventSelect(event: any) {
+    const eventId = Number(event.target.value);
+    if (eventId) {
+      this.selectedEventId = eventId;
+      const selectedEvent = this.userEvents.find((e) => e.id === eventId);
+      if (selectedEvent) {
+        this.ticketCategories = selectedEvent.ticketCategories
+          ? JSON.parse(JSON.stringify(selectedEvent.ticketCategories))
+          : [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
+        this.seatConfiguration = selectedEvent.seatConfiguration
+          ? JSON.parse(JSON.stringify(selectedEvent.seatConfiguration))
+          : [
+              { row: 'A', category: 'GEN' },
+              { row: 'B', category: 'GEN' },
+              { row: 'C', category: 'GEN' },
+              { row: 'D', category: 'GEN' },
+              { row: 'E', category: 'GEN' },
+              { row: 'F', category: 'GEN' },
+              { row: 'G', category: 'GEN' },
+              { row: 'H', category: 'GEN' },
+              { row: 'I', category: 'GEN' },
+              { row: 'J', category: 'GEN' },
+              { row: 'AA', category: 'GEN' },
+              { row: 'BB', category: 'GEN' },
+              { row: 'CC', category: 'GEN' },
+              { row: 'DD', category: 'GEN' },
+              { row: 'EE', category: 'GEN' },
+            ];
+      }
+    } else {
+      this.selectedEventId = null;
+      this.ticketCategories = [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
+      this.seatConfiguration = [
+        { row: 'A', category: 'GEN' },
+        { row: 'B', category: 'GEN' },
+        { row: 'C', category: 'GEN' },
+        { row: 'D', category: 'GEN' },
+        { row: 'E', category: 'GEN' },
+        { row: 'F', category: 'GEN' },
+        { row: 'G', category: 'GEN' },
+        { row: 'H', category: 'GEN' },
+        { row: 'I', category: 'GEN' },
+        { row: 'J', category: 'GEN' },
+        { row: 'AA', category: 'GEN' },
+        { row: 'BB', category: 'GEN' },
+        { row: 'CC', category: 'GEN' },
+        { row: 'DD', category: 'GEN' },
+        { row: 'EE', category: 'GEN' },
+      ];
+    }
+  }
 
   constructor(private router: Router) {}
 
@@ -48,6 +124,12 @@ export class Dashboard {
     try {
       const user = JSON.parse(userJson);
       this.userName = user.name || 'Organizer';
+
+      const eventsJson = localStorage.getItem('pf-events');
+      if (eventsJson) {
+        const allEvents: Event[] = JSON.parse(eventsJson);
+        this.userEvents = allEvents.filter((event) => event.email === user.email);
+      }
     } catch {
       this.userName = 'Organizer';
     }
@@ -66,6 +148,18 @@ export class Dashboard {
     this.router.navigate(['/home']);
   }
 
+  addCategory() {
+    this.ticketCategories.push({ name: '', shortName: '', price: 0 });
+  }
+
+  removeCategory(index: number) {
+    if (this.ticketCategories.length > 1) {
+      this.ticketCategories.splice(index, 1);
+    } else {
+      alert('You must have at least one category.');
+    }
+  }
+
   submitForm() {
     if (this.activeChoice === 'create-event') {
       const title = (document.getElementById('event-title') as HTMLInputElement).value;
@@ -78,7 +172,7 @@ export class Dashboard {
       const discount = parseFloat(
         (document.getElementById('event-discount') as HTMLInputElement).value,
       );
-      
+
       let userEmail: string | undefined;
       const currentUserJson = localStorage.getItem('pf-current-user');
       if (currentUserJson) {
@@ -125,23 +219,69 @@ export class Dashboard {
           discount,
           email: userEmail,
           poster: posterBase64,
+          ticketCategories: this.ticketCategories,
+          seatConfiguration: this.seatConfiguration,
         });
       };
 
       reader.onerror = (error) => {
         console.error('Error reading file:', error);
         alert('Could not read event poster file.');
-        this.saveEvent({ title, location, date, time, description, promoCode, discount, email: userEmail }); // Save without poster
+        this.saveEvent({
+          title,
+          location,
+          date,
+          time,
+          description,
+          promoCode,
+          discount,
+          email: userEmail,
+          ticketCategories: this.ticketCategories,
+          seatConfiguration: this.seatConfiguration,
+        }); // Save without poster
       };
 
       if (posterFile) {
         reader.readAsDataURL(posterFile);
       } else {
-        this.saveEvent({ title, location, date, time, description, promoCode, discount, email: userEmail });
+        this.saveEvent({
+          title,
+          location,
+          date,
+          time,
+          description,
+          promoCode,
+          discount,
+          email: userEmail,
+          ticketCategories: this.ticketCategories,
+          seatConfiguration: this.seatConfiguration,
+        });
       }
     } else if (this.activeChoice === 'edit-event') {
-      // Future implementation for editing events
-      alert('Edit event functionality is not yet implemented.');
+      if (this.selectedEventId === null) {
+        alert('Please select an event to edit.');
+        return;
+      }
+
+      const eventsJson = localStorage.getItem('pf-events');
+      let events: Event[] = [];
+      if (eventsJson) {
+        try {
+          events = JSON.parse(eventsJson);
+        } catch (e) {
+          console.error('Error parsing events from localStorage', e);
+        }
+      }
+
+      const eventIndex = events.findIndex((e) => e.id === this.selectedEventId);
+      if (eventIndex !== -1) {
+        events[eventIndex].ticketCategories = this.ticketCategories;
+        events[eventIndex].seatConfiguration = this.seatConfiguration;
+        localStorage.setItem('pf-events', JSON.stringify(events));
+        alert('Event updated successfully!');
+      } else {
+        alert('Selected event not found.');
+      }
     }
   }
 
