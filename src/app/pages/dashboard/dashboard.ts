@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -11,6 +10,7 @@ interface Event {
   time: string;
   description: string;
   location: string;
+  email?: string;
   poster?: string;
   isNew?: boolean;
   isSpecial?: boolean;
@@ -78,6 +78,18 @@ export class Dashboard {
       const discount = parseFloat(
         (document.getElementById('event-discount') as HTMLInputElement).value,
       );
+      
+      let userEmail: string | undefined;
+      const currentUserJson = localStorage.getItem('pf-current-user');
+      if (currentUserJson) {
+        try {
+          const user = JSON.parse(currentUserJson);
+          userEmail = user.email;
+        } catch (e) {
+          console.error('Error parsing current user from localStorage', e);
+        }
+      }
+
       const posterFile = (document.getElementById('event-poster') as HTMLInputElement).files?.[0];
 
       if (!title || !location || !date || !time || !description) {
@@ -111,6 +123,7 @@ export class Dashboard {
           description,
           promoCode,
           discount,
+          email: userEmail,
           poster: posterBase64,
         });
       };
@@ -118,13 +131,13 @@ export class Dashboard {
       reader.onerror = (error) => {
         console.error('Error reading file:', error);
         alert('Could not read event poster file.');
-        this.saveEvent({ title, location, date, time, description, promoCode, discount }); // Save without poster
+        this.saveEvent({ title, location, date, time, description, promoCode, discount, email: userEmail }); // Save without poster
       };
 
       if (posterFile) {
         reader.readAsDataURL(posterFile);
       } else {
-        this.saveEvent({ title, location, date, time, description, promoCode, discount });
+        this.saveEvent({ title, location, date, time, description, promoCode, discount, email: userEmail });
       }
     } else if (this.activeChoice === 'edit-event') {
       // Future implementation for editing events
