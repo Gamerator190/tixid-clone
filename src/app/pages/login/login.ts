@@ -28,7 +28,7 @@ export class LoginComponent {
   constructor(private router: Router) {}
 
   private getUsersFromStorage(): User[] {
-    const usersJson = localStorage.getItem('tix-users');
+    const usersJson = localStorage.getItem('pf-users');
     if (!usersJson) return [];
     try {
       return JSON.parse(usersJson) as User[];
@@ -47,9 +47,7 @@ export class LoginComponent {
 
     setTimeout(() => {
       const users = this.getUsersFromStorage();
-      const found = users.find(
-        (u) => u.email === this.email && u.password === this.password
-      );
+      const found = users.find((u) => u.email === this.email && u.password === this.password);
 
       this.isLoading = false;
 
@@ -59,7 +57,7 @@ export class LoginComponent {
       }
 
       // Save info of the currently logged-in user (optional)
-      localStorage.setItem('tix-current-user', JSON.stringify(found));
+      localStorage.setItem('pf-current-user', JSON.stringify(found));
 
       alert(`Welcome, ${found.name}! (we will redirect to the Home page later)`);
 
@@ -86,9 +84,7 @@ export class LoginComponent {
 
     setTimeout(() => {
       const users = this.getUsersFromStorage();
-      const found = users.find(
-        (u) => u.phone === this.phone && u.password === this.password
-      );
+      const found = users.find((u) => u.phone === this.phone && u.password === this.password);
 
       this.isLoading = false;
 
@@ -97,7 +93,7 @@ export class LoginComponent {
         return;
       }
 
-      localStorage.setItem('tix-current-user', JSON.stringify(found));
+      localStorage.setItem('pf-current-user', JSON.stringify(found));
 
       alert(`Welcome, ${found.name}!`);
 

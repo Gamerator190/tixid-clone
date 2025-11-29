@@ -32,7 +32,7 @@ export class RegisterComponent {
   constructor(private router: Router) {}
 
   private getUsersFromStorage(): User[] {
-    const usersJson = localStorage.getItem('tix-users');
+    const usersJson = localStorage.getItem('pf-users');
     if (!usersJson) return [];
     try {
       return JSON.parse(usersJson) as User[];
@@ -42,7 +42,7 @@ export class RegisterComponent {
   }
 
   private saveUsersToStorage(users: User[]) {
-    localStorage.setItem('tix-users', JSON.stringify(users));
+    localStorage.setItem('pf-users', JSON.stringify(users));
   }
 
   register() {

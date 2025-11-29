@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 interface Ticket {
-  movie: string;
+  event: string;
   poster: string;
   time: string;
   seats: string[];
@@ -31,7 +31,7 @@ interface SeatSelection {
   styleUrl: './checkout.css',
 })
 export class CheckoutComponent implements OnInit {
-  movie: any = null;
+  event: any = null;
   time = '';
 
   // daftar tipe + harga (kode harus sama dengan dari seat-picker: VIP/REG/SNR/CHD)
@@ -47,11 +47,11 @@ export class CheckoutComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    const movieId = Number(this.route.snapshot.paramMap.get('id'));
+    const eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.time = String(this.route.snapshot.paramMap.get('time'));
     const seatsParam = this.route.snapshot.paramMap.get('seats') || '';
 
@@ -69,14 +69,14 @@ export class CheckoutComponent implements OnInit {
         .filter((s) => !!s.seat);
     }
 
-    const moviesJson = localStorage.getItem('tix-movie-list');
-    if (moviesJson) {
-      const movies = JSON.parse(moviesJson);
-      this.movie = movies.find((m: any) => m.id === movieId);
+    const eventsJson = localStorage.getItem('pf-event-list');
+    if (eventsJson) {
+      const events = JSON.parse(eventsJson);
+      this.event = events.find((m: any) => m.id === eventId);
     }
 
-    if (!this.movie) {
-      alert('Movie data not found');
+    if (!this.event) {
+      alert('Event data not found');
       this.router.navigate(['/home']);
       return;
     }
@@ -100,10 +100,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   updateTotal() {
-    this.total = this.seatSelections.reduce(
-      (sum, sel) => sum + this.getTypePrice(sel.typeCode),
-      0
-    );
+    this.total = this.seatSelections.reduce((sum, sel) => sum + this.getTypePrice(sel.typeCode), 0);
   }
 
   formatRupiah(value: number): string {
@@ -111,7 +108,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/movie', this.movie.id, 'schedule']);
+    this.router.navigate(['/event', this.event.id, 'schedule']);
   }
 
   bayar() {
@@ -121,8 +118,8 @@ export class CheckoutComponent implements OnInit {
     }
 
     const ticket: Ticket = {
-      movie: this.movie.title,
-      poster: this.movie.poster,
+      event: this.event.title,
+      poster: this.event.poster,
       time: this.time,
       seats: this.seatSelections.map((s) => s.seat),
       total: this.total,
@@ -130,13 +127,11 @@ export class CheckoutComponent implements OnInit {
       seatDetails: this.seatSelections,
     };
 
-    const existing: Ticket[] = JSON.parse(
-      localStorage.getItem('tix-tickets') || '[]'
-    );
+    const existing: Ticket[] = JSON.parse(localStorage.getItem('pf-tickets') || '[]');
     existing.push(ticket);
-    localStorage.setItem('tix-tickets', JSON.stringify(existing));
+    localStorage.setItem('pf-tickets', JSON.stringify(existing));
 
     alert('Payment successful! Ticket saved 🎉');
-    this.router.navigate(['/tiket-saya']);
+    this.router.navigate(['/my-tickets']);
   }
 }

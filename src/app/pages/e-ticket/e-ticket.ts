@@ -8,7 +8,7 @@ interface SeatSelection {
 }
 
 interface Ticket {
-  movie: string;
+  event: string;
   poster: string;
   time: string;
   seats: string[];
@@ -45,15 +45,15 @@ export class ETicketComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.index = Number(this.route.snapshot.paramMap.get('index') || 0);
 
-    const raw = localStorage.getItem('tix-tickets');
+    const raw = localStorage.getItem('pf-tickets');
     if (!raw) {
-      this.router.navigate(['/tiket-saya']);
+      this.router.navigate(['/my-tickets']);
       return;
     }
 
@@ -62,7 +62,7 @@ export class ETicketComponent implements OnInit {
       this.ticket = list[this.index];
 
       if (!this.ticket) {
-        this.router.navigate(['/tiket-saya']);
+        this.router.navigate(['/my-tickets']);
         return;
       }
 
@@ -73,9 +73,8 @@ export class ETicketComponent implements OnInit {
           typeCode: 'REG',
         }));
       }
-
     } catch (err) {
-      this.router.navigate(['/tiket-saya']);
+      this.router.navigate(['/my-tickets']);
     }
   }
 
@@ -95,6 +94,6 @@ export class ETicketComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/tiket-saya']);
+    this.router.navigate(['/my-tickets']);
   }
 }

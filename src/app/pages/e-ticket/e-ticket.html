@@ -7,38 +7,27 @@
 
   <!-- KARTU TIKET -->
   <div class="ticket-card">
-
     <!-- Poster + Info -->
     <div class="top">
-      <img class="poster" [src]="ticket.poster" [alt]="ticket.movie" />
+      <img class="poster" [src]="ticket.poster" [alt]="ticket.event" />
 
       <div class="info">
-        <div class="movie-title">{{ ticket.movie }}</div>
+        <div class="event-title">{{ ticket.event }}</div>
         <div class="line">{{ ticket.date }}</div>
         <div class="line">Jam: {{ ticket.time }}</div>
         <div class="line">Kursi: {{ ticket.seats.join(', ') }}</div>
-        <div class="line total">
-          Total: Rp {{ formatRupiah(ticket.total) }}
-        </div>
+        <div class="line total">Total: Rp {{ formatRupiah(ticket.total) }}</div>
       </div>
     </div>
 
     <!-- 🔥 RINCIAN KURSI PER TIPE -->
-    <div
-      class="seat-detail-block"
-      *ngIf="ticket.seatDetails?.length"
-    >
+    <div class="seat-detail-block" *ngIf="ticket.seatDetails?.length">
       <div class="seat-detail-title">Seat Details</div>
 
-      <div
-        class="seat-detail-row"
-        *ngFor="let s of ticket.seatDetails"
-      >
+      <div class="seat-detail-row" *ngFor="let s of ticket.seatDetails">
         <span class="sd-seat">{{ s.seat }}</span>
         <span class="sd-type">{{ getTypeLabel(s.typeCode) }}</span>
-        <span class="sd-price">
-          Rp {{ formatRupiah(getTypePrice(s.typeCode)) }}
-        </span>
+        <span class="sd-price"> Rp {{ formatRupiah(getTypePrice(s.typeCode)) }} </span>
       </div>
     </div>
 
@@ -58,13 +47,9 @@
           </div>
         </div>
       </div>
-      <div class="qr-text">
-        Show this E-Ticket to the cinema staff for scanning.
-      </div>
+      <div class="qr-text">Show this E-Ticket to the cinema staff for scanning.</div>
     </div>
   </div>
 
-  <div class="hint">
-    Screenshot this page to save the E-Ticket in your gallery 📱
-  </div>
+  <div class="hint">Screenshot this page to save the E-Ticket in your gallery 📱</div>
 </div>

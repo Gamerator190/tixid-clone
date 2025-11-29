@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-interface Movie {
+interface Event {
   id: number;
   title: string;
   genre: string;
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
 
   constructor(public router: Router) {}
 
-  movies: Movie[] = [
+  events: Event[] = [
     {
       id: 1,
       title: 'Digital Innovation Conference 2025',
@@ -204,7 +204,7 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('tix-current-user');
+    const userJson = localStorage.getItem('pf-current-user');
 
     if (!userJson) {
       this.router.navigate(['/login']);
@@ -213,14 +213,14 @@ export class HomeComponent implements OnInit {
 
     try {
       const user = JSON.parse(userJson);
-      this.userName = user.name || 'Movie Lover';
+      this.userName = user.name || 'Event Lover';
       this.userRole = user.role || '';
     } catch {
-      this.userName = 'Movie Lover';
+      this.userName = 'Event Lover';
     }
 
-    // simpan movie list ke localstorage agar bisa diakses detail
-    localStorage.setItem('tix-movie-list', JSON.stringify(this.movies));
+    // simpan event list ke localstorage agar bisa diakses detail
+    localStorage.setItem('pf-event-list', JSON.stringify(this.events));
   }
 
   toggleUserMenu() {
@@ -231,8 +231,8 @@ export class HomeComponent implements OnInit {
     alert('There are no new notifications 😊');
   }
 
-  goMovie(id: number) {
-    this.router.navigate(['/movie', id]);
+  goEvent(id: number) {
+    this.router.navigate(['/event', id]);
   }
 
   goAdmin() {
@@ -244,7 +244,7 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('tix-current-user');
+    localStorage.removeItem('pf-current-user');
     this.router.navigate(['/login']);
   }
 }

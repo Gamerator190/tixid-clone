@@ -1,4 +1,4 @@
-<div class="checkout-page" *ngIf="movie">
+<div class="checkout-page" *ngIf="event">
   <!-- HEADER -->
   <div class="header">
     <button class="back-btn" (click)="goBack()">«</button>
@@ -6,12 +6,12 @@
   </div>
 
   <!-- INFO FILM -->
-  <div class="movie-box">
-    <img [src]="movie.poster" class="poster" [alt]="movie.title" />
+  <div class="event-box">
+    <img [src]="event.poster" class="poster" [alt]="event.title" />
 
-    <div class="movie-info">
-      <h2>{{ movie.title }}</h2>
-      <p class="genre">{{ movie.genre }}</p>
+    <div class="event-info">
+      <h2>{{ event.title }}</h2>
+      <p class="genre">{{ event.genre }}</p>
       <p class="line">Jam: {{ time }}</p>
       <p class="line">Kursi: {{ seatListLabel }}</p>
     </div>
@@ -23,12 +23,8 @@
 
     <div class="seat-type-row" *ngFor="let sel of seatSelections">
       <div class="seat-name">{{ sel.seat }}</div>
-      <div class="seat-type">
-        {{ getTypeLabel(sel.typeCode) }}
-      </div>
-      <div class="seat-price">
-        Rp {{ formatRupiah(getTypePrice(sel.typeCode)) }}
-      </div>
+      <div class="seat-type">{{ getTypeLabel(sel.typeCode) }}</div>
+      <div class="seat-price">Rp {{ formatRupiah(getTypePrice(sel.typeCode)) }}</div>
     </div>
   </div>
 
@@ -48,7 +44,5 @@
   </div>
 
   <!-- BUTTON BAYAR -->
-  <button class="pay-btn" (click)="bayar()">
-    Pay Now
-  </button>
+  <button class="pay-btn" (click)="bayar()">Pay Now</button>
 </div>

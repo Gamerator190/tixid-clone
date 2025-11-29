@@ -1,8 +1,13 @@
 .eticket-page {
   min-height: 100vh;
   background: #ffffff; /* putih */
-  color: #0F1939;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #0f1939;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   padding: 16px;
   box-sizing: border-box;
 }
@@ -19,9 +24,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(209,213,219,0.7);
-  background: #FAEBD7;
-  color: #0F1939;
+  border: 1px solid rgba(209, 213, 219, 0.7);
+  background: #faebd7;
+  color: #0f1939;
   cursor: pointer;
   font-size: 18px;
   display: flex;
@@ -32,16 +37,16 @@
 .title {
   font-size: 18px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* TICKET CARD */
 .ticket-card {
-  background: linear-gradient(135deg, #FAEBD7, #ffffff);
+  background: linear-gradient(135deg, #faebd7, #ffffff);
   border-radius: 20px;
   padding: 16px 14px 18px;
   box-shadow: 0 12px 30px rgba(15, 25, 57, 0.15);
-  border: 1px solid rgba(209,213,219,0.8);
+  border: 1px solid rgba(209, 213, 219, 0.8);
 }
 
 /* TOP PART */
@@ -64,37 +69,37 @@
   gap: 4px;
 }
 
-.movie-title {
+.event-title {
   font-size: 16px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .line {
   font-size: 12px;
-  color: #516AC8;
+  color: #516ac8;
 }
 
 .total {
   margin-top: 4px;
   font-weight: 700;
-  color: #E3AF64;
+  color: #e3af64;
 }
 
 /* RINCIAN KURSI */
 .seat-detail-block {
   margin-top: 10px;
-  background: #FAEBD7;
+  background: #faebd7;
   border-radius: 12px;
   padding: 8px 10px;
   font-size: 12px;
-  border: 1px solid rgba(209,213,219,0.7);
+  border: 1px solid rgba(209, 213, 219, 0.7);
 }
 
 .seat-detail-title {
   font-weight: 700;
   margin-bottom: 4px;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .seat-detail-row {
@@ -107,16 +112,16 @@
 .sd-seat {
   font-weight: 700;
   min-width: 38px;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .sd-type {
-  color: #516AC8;
+  color: #516ac8;
 }
 
 .sd-price {
   font-weight: 600;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* CUT LINE */
@@ -133,7 +138,7 @@
   height: 16px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid rgba(209,213,219,0.7);
+  border: 1px solid rgba(209, 213, 219, 0.7);
   position: absolute;
 }
 
@@ -147,7 +152,7 @@
 
 .dashed {
   width: 100%;
-  border-top: 1px dashed rgba(209,213,219,0.9);
+  border-top: 1px dashed rgba(209, 213, 219, 0.9);
 }
 
 /* BOTTOM + QR */
@@ -162,13 +167,13 @@
   background: #ffffff;
   padding: 8px;
   border-radius: 12px;
-  border: 1px solid rgba(209,213,219,0.9);
+  border: 1px solid rgba(209, 213, 219, 0.9);
 }
 
 .qr-inner {
   width: 120px;
   height: 120px;
-  background: #FAEBD7;
+  background: #faebd7;
   display: flex;
   flex-direction: column;
   padding: 8px;
@@ -189,12 +194,12 @@
 /* pola QR */
 .qr-row:nth-child(odd) span:nth-child(odd),
 .qr-row:nth-child(even) span:nth-child(even) {
-  background: #0F1939; /* navy */
+  background: #0f1939; /* navy */
 }
 
 .qr-text {
   font-size: 11px;
-  color: #516AC8;
+  color: #516ac8;
   text-align: center;
   max-width: 220px;
 }
@@ -203,6 +208,6 @@
 .hint {
   margin-top: 14px;
   font-size: 12px;
-  color: #516AC8;
+  color: #516ac8;
   text-align: center;
 }

@@ -1,8 +1,13 @@
 .tickets-page {
   min-height: 100vh;
   background: #ffffff; /* putih */
-  color: #0F1939;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #0f1939;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   padding: 16px;
   box-sizing: border-box;
 }
@@ -19,9 +24,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(209,213,219,0.7);
-  background: #FAEBD7;
-  color: #0F1939;
+  border: 1px solid rgba(209, 213, 219, 0.7);
+  background: #faebd7;
+  color: #0f1939;
   cursor: pointer;
   font-size: 18px;
   display: flex;
@@ -32,20 +37,20 @@
 .title {
   font-size: 18px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* EMPTY STATE */
 .empty {
   margin-top: 60px;
   text-align: center;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .empty-icon {
   font-size: 40px;
   margin-bottom: 10px;
-  color: #516AC8;
+  color: #516ac8;
 }
 
 .empty-title {
@@ -56,7 +61,7 @@
 
 .empty-text {
   font-size: 13px;
-  color: #516AC8;
+  color: #516ac8;
   margin-bottom: 16px;
 }
 
@@ -64,11 +69,11 @@
   padding: 10px 16px;
   border-radius: 999px;
   border: none;
-  background: #E3AF64; /* gold */
-  color: #0F1939;
+  background: #e3af64; /* gold */
+  color: #0f1939;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(15,25,57,0.15);
+  box-shadow: 0 6px 20px rgba(15, 25, 57, 0.15);
 }
 
 /* TICKETS LIST */
@@ -81,18 +86,21 @@
 .ticket-card {
   display: flex;
   gap: 12px;
-  background: #FAEBD7;
+  background: #faebd7;
   border-radius: 16px;
   padding: 10px;
-  box-shadow: 0 10px 18px rgba(15,25,57,0.10);
+  box-shadow: 0 10px 18px rgba(15, 25, 57, 0.1);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 
 .ticket-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 26px rgba(15,25,57,0.16);
-  background: #F5DDB8; /* sedikit lebih gelap */
+  box-shadow: 0 14px 26px rgba(15, 25, 57, 0.16);
+  background: #f5ddb8; /* sedikit lebih gelap */
 }
 
 .poster-wrap img {
@@ -107,13 +115,13 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: #0F1939;
+  color: #0f1939;
 }
 
-.movie-title {
+.event-title {
   font-size: 15px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .row {
@@ -124,17 +132,17 @@
 }
 
 .row .label {
-  color: #516AC8;
+  color: #516ac8;
 }
 
 .row .value {
   font-weight: 600;
   text-align: right;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .total-row .value {
-  color: #E3AF64;
+  color: #e3af64;
   font-weight: 700;
 }
 

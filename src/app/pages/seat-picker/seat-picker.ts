@@ -12,7 +12,7 @@ type Seat = { id: string; booked: boolean; type: string };
   styleUrl: './seat-picker.css',
 })
 export class SeatPickerComponent implements OnInit {
-  movieId!: number;
+  eventId!: number;
   time!: string;
 
   // LOWER FOYER: A–J (10 baris)
@@ -38,7 +38,7 @@ export class SeatPickerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.movieId = Number(this.route.snapshot.paramMap.get('id'));
+    this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.time = String(this.route.snapshot.paramMap.get('time'));
     this.generateSeats();
   }
@@ -113,7 +113,7 @@ export class SeatPickerComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/movie', this.movieId, 'schedule']);
+    this.router.navigate(['/event', this.eventId, 'schedule']);
   }
 
   get selectedSeatDetails() {
@@ -149,6 +149,6 @@ export class SeatPickerComponent implements OnInit {
       })
       .join(',');
 
-    this.router.navigate(['/checkout', this.movieId, this.time, seatData]);
+    this.router.navigate(['/checkout', this.eventId, this.time, seatData]);
   }
 }

@@ -32,7 +32,7 @@ export class Dashboard {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('tix-current-user');
+    const userJson = localStorage.getItem('pf-current-user');
 
     if (!userJson) {
       this.router.navigate(['/login']);
@@ -52,7 +52,7 @@ export class Dashboard {
   }
 
   logout() {
-    localStorage.removeItem('tix-current-user');
+    localStorage.removeItem('pf-current-user');
     this.router.navigate(['/login']);
   }
 

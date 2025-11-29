@@ -1,4 +1,4 @@
-.movie-detail-page {
+.event-detail-page {
   min-height: 100vh;
   background: #ffffff;
   color: #111827;
@@ -138,7 +138,7 @@
   margin-top: 22px;
   font-size: 14px;
   font-weight: 700;
-  color: #E3AF64;
+  color: #e3af64;
 }
 
 .synopsis {
@@ -153,7 +153,7 @@
   margin-top: 26px;
   width: 100%;
   border: none;
-  background: linear-gradient(135deg, #FAEBD7, #E3AF64);
+  background: linear-gradient(135deg, #faebd7, #e3af64);
   padding: 14px;
   border-radius: 14px;
   font-size: 15px;

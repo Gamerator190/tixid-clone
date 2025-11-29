@@ -8,7 +8,7 @@ interface SeatSelection {
 }
 
 interface Ticket {
-  movie: string;
+  event: string;
   poster: string;
   time: string;
   seats: string[];
@@ -38,7 +38,7 @@ export class MyTicketsComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    const raw = localStorage.getItem('tix-tickets');
+    const raw = localStorage.getItem('pf-tickets');
     if (raw) {
       try {
         const list: Ticket[] = JSON.parse(raw);
@@ -83,6 +83,6 @@ export class MyTicketsComponent implements OnInit {
   }
 
   openTicket(i: number) {
-    this.router.navigate(['/tiket-saya', i]);
+    this.router.navigate(['/my-tickets', i]);
   }
 }

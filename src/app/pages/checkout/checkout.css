@@ -2,8 +2,12 @@
   padding: 16px;
   background: #ffffff; /* putih */
   min-height: 100vh;
-  color: #0F1939;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  color: #0f1939;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
     sans-serif;
   box-sizing: border-box;
 }
@@ -22,8 +26,8 @@
   height: 40px;
   border-radius: 50%;
   border: 1px solid rgba(209, 213, 219, 0.7);
-  background: #FAEBD7;
-  color: #0F1939;
+  background: #faebd7;
+  color: #0f1939;
   cursor: pointer;
   font-size: 18px;
   display: flex;
@@ -34,15 +38,15 @@
 .title {
   font-size: 18px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* MOVIE BOX */
 
-.movie-box {
+.event-box {
   display: flex;
   gap: 12px;
-  background: #FAEBD7;
+  background: #faebd7;
   padding: 12px;
   border-radius: 16px;
   margin-bottom: 18px;
@@ -57,23 +61,23 @@
   object-fit: cover;
 }
 
-.movie-info h2 {
+.event-info h2 {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
-.movie-info .genre {
+.event-info .genre {
   margin: 2px 0 6px;
   font-size: 12px;
-  color: #516AC8;
+  color: #516ac8;
 }
 
-.movie-info .line {
+.event-info .line {
   margin: 2px 0;
   font-size: 12px;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* PRICE BOX */
@@ -92,7 +96,7 @@
   justify-content: space-between;
   font-size: 13px;
   margin: 4px 0;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 hr {
@@ -104,7 +108,7 @@ hr {
 .total {
   font-size: 15px;
   font-weight: 700;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 /* BUTTON */
@@ -114,8 +118,8 @@ hr {
   padding: 14px;
   border-radius: 14px;
   border: none;
-  background: #E3AF64; /* gold utama */
-  color: #0F1939;
+  background: #e3af64; /* gold utama */
+  color: #0f1939;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
@@ -141,7 +145,7 @@ hr {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: 600;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .seat-type-row {
@@ -155,7 +159,7 @@ hr {
   min-width: 50px;
   font-size: 13px;
   font-weight: 600;
-  color: #0F1939;
+  color: #0f1939;
 }
 
 .seat-select {
@@ -164,6 +168,6 @@ hr {
   border-radius: 10px;
   border: 1px solid rgba(209, 213, 219, 0.9);
   background: #ffffff;
-  color: #0F1939;
+  color: #0f1939;
   font-size: 12px;
 }

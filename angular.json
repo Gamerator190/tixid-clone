@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "tixid-clone": {
+    "pf-clone": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -25,9 +25,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -62,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "tixid-clone:build:production"
+              "buildTarget": "pf-clone:build:production"
             },
             "development": {
-              "buildTarget": "tixid-clone:build:development"
+              "buildTarget": "pf-clone:build:development"
             }
           },
           "defaultConfiguration": "development"

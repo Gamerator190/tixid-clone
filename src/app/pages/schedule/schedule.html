@@ -1,9 +1,8 @@
-<div class="schedule-page" *ngIf="movie">
-
+<div class="schedule-page" *ngIf="event">
   <!-- Header -->
   <div class="header">
     <button class="back-btn" (click)="goBack()">«</button>
-    <div class="title">{{ movie.title }}</div>
+    <div class="title">{{ event.title }}</div>
   </div>
 
   <!-- Date Selector -->
@@ -34,11 +33,8 @@
       </div>
 
       <ng-template #noTimes>
-        <div class="no-times">
-          There is no schedule for this date yet. Please check back later.
-        </div>
+        <div class="no-times">There is no schedule for this date yet. Please check back later.</div>
       </ng-template>
     </div>
   </div>
-
 </div>

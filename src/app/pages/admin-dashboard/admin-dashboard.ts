@@ -38,7 +38,7 @@ export class AdminDashboard implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('tix-current-user');
+    const userJson = localStorage.getItem('pf-current-user');
 
     if (!userJson) {
       this.router.navigate(['/login']);
@@ -62,7 +62,7 @@ export class AdminDashboard implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('tix-current-user');
+    localStorage.removeItem('pf-current-user');
     this.router.navigate(['/login']);
   }
 
@@ -75,7 +75,7 @@ export class AdminDashboard implements OnInit {
   }
 
   private getUsersFromStorage(): User[] {
-    const usersJson = localStorage.getItem('tix-users');
+    const usersJson = localStorage.getItem('pf-users');
     if (!usersJson) return [];
     try {
       return JSON.parse(usersJson) as User[];
@@ -85,7 +85,7 @@ export class AdminDashboard implements OnInit {
   }
 
   private saveUsersToStorage(users: User[]) {
-    localStorage.setItem('tix-users', JSON.stringify(users));
+    localStorage.setItem('pf-users', JSON.stringify(users));
   }
 
   register() {

@@ -46,22 +46,22 @@
 
   <main class="content">
     <!-- HERO SECTION -->
-    <section class="hero-card" *ngIf="movies.length">
+    <section class="hero-card" *ngIf="events.length">
       <div class="hero-text">
         <p class="hero-label">Now Showing</p>
-        <h1 class="hero-title">{{ movies[0].title }}</h1>
+        <h1 class="hero-title">{{ events[0].title }}</h1>
         <p class="hero-subtitle">
-          {{ movies[0].genre }} · Rating {{ movies[0].rating | number : '1.1-1' }} · {{
-          movies[0].duration }}
+          {{ events[0].genre }} · Rating {{ events[0].rating | number : '1.1-1' }} · {{
+          events[0].duration }}
         </p>
-        <button class="hero-btn" type="button" (click)="goMovie(movies[0].id)">
+        <button class="hero-btn" type="button" (click)="goEvent(events[0].id)">
           See today's schedule
         </button>
       </div>
       <div class="hero-poster">
-        <img [src]="movies[0].poster" [alt]="movies[0].title" />
+        <img [src]="events[0].poster" [alt]="events[0].title" />
         <div class="hero-badge">
-          Top Pick {{ movies[0].releaseDate ? '· ' + movies[0].releaseDate : '' }}
+          Top Pick {{ events[0].releaseDate ? '· ' + events[0].releaseDate : '' }}
         </div>
       </div>
     </section>
@@ -88,18 +88,18 @@
         <button class="see-all" type="button">See all</button>
       </div>
 
-      <div class="movie-scroll">
-        <div class="movie-tile" *ngFor="let movie of movies" (click)="goMovie(movie.id)">
+      <div class="event-scroll">
+        <div class="event-tile" *ngFor="let event of events" (click)="goEvent(event.id)">
           <div class="tile-poster">
-            <img [src]="movie.poster" [alt]="movie.title" />
-            <div class="tile-rating">★ {{ movie.rating | number : '1.1-1' }}</div>
-            <div class="tile-badge new" *ngIf="movie.isNew">NEW</div>
-            <div class="tile-badge imax" *ngIf="movie.isImax">IMAX</div>
+            <img [src]="event.poster" [alt]="event.title" />
+            <div class="tile-rating">★ {{ event.rating | number : '1.1-1' }}</div>
+            <div class="tile-badge new" *ngIf="event.isNew">NEW</div>
+            <div class="tile-badge imax" *ngIf="event.isImax">IMAX</div>
           </div>
-          <div class="tile-title">{{ movie.title }}</div>
+          <div class="tile-title">{{ event.title }}</div>
           <div class="tile-genre">
-            {{ movie.genre }}
-            <span *ngIf="movie.releaseDate"> · {{ movie.releaseDate }}</span>
+            {{ event.genre }}
+            <span *ngIf="event.releaseDate"> · {{ event.releaseDate }}</span>
           </div>
         </div>
       </div>
@@ -108,28 +108,28 @@
     <!-- GRID LIST -->
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">All Movies</h2>
+        <h2 class="section-title">All Events</h2>
       </div>
 
-      <div class="movie-grid">
-        <div class="movie-card" *ngFor="let movie of movies" (click)="goMovie(movie.id)">
+      <div class="event-grid">
+        <div class="event-card" *ngFor="let event of events" (click)="goEvent(event.id)">
           <div class="poster-wrap">
-            <img [src]="movie.poster" [alt]="movie.title" />
-            <div class="age-badge">{{ movie.ageRating }}</div>
-            <div class="rating-badge">★ {{ movie.rating | number : '1.1-1' }}</div>
-            <div class="corner-tag imax" *ngIf="movie.isImax">IMAX</div>
-            <div class="corner-tag new" *ngIf="movie.isNew">NEW</div>
+            <img [src]="event.poster" [alt]="event.title" />
+            <div class="age-badge">{{ event.ageRating }}</div>
+            <div class="rating-badge">★ {{ event.rating | number : '1.1-1' }}</div>
+            <div class="corner-tag imax" *ngIf="event.isImax">IMAX</div>
+            <div class="corner-tag new" *ngIf="event.isNew">NEW</div>
           </div>
-          <div class="movie-info">
-            <div class="title">{{ movie.title }}</div>
+          <div class="event-info">
+            <div class="title">{{ event.title }}</div>
             <div class="genre">
-              {{ movie.genre }}
-              <span *ngIf="movie.releaseDate"> · {{ movie.releaseDate }}</span>
+              {{ event.genre }}
+              <span *ngIf="event.releaseDate"> · {{ event.releaseDate }}</span>
             </div>
             <div class="meta">
-              <span>{{ movie.duration }}</span>
+              <span>{{ event.duration }}</span>
               <span class="dot">•</span>
-              <span>{{ movie.ageRating }}</span>
+              <span>{{ event.ageRating }}</span>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </button>
-    <button class="nav-item" type="button" (click)="router.navigate(['/tiket-saya'])">
+    <button class="nav-item" type="button" (click)="router.navigate(['/my-tickets'])">
       <div class="nav-icon">🎟️</div>
       <div class="nav-label">Tickets</div>
     </button>

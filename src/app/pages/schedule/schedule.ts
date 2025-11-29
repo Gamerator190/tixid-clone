@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './schedule.css',
 })
 export class ScheduleComponent implements OnInit {
-  movie: any = null;
+  event: any = null;
   selectedDateIndex = 0;
 
   dates: string[] = [];
@@ -38,14 +38,14 @@ export class ScheduleComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    const moviesJson = localStorage.getItem('tix-movie-list');
-    let movies: any[] = [];
+    const eventsJson = localStorage.getItem('pf-event-list');
+    let events: any[] = [];
 
-    if (moviesJson) movies = JSON.parse(moviesJson);
+    if (eventsJson) events = JSON.parse(eventsJson);
 
-    this.movie = movies.find((m: any) => m.id === id);
+    this.event = events.find((m: any) => m.id === id);
 
-    if (!this.movie) {
+    if (!this.event) {
       this.router.navigate(['/home']);
       return;
     }
@@ -76,10 +76,10 @@ export class ScheduleComponent implements OnInit {
   }
 
   goSelectSeat(time: string) {
-    this.router.navigate(['/movie', this.movie.id, 'schedule', time, 'seats']);
+    this.router.navigate(['/event', this.event.id, 'schedule', time, 'seats']);
   }
 
   goBack() {
-    this.router.navigate(['/movie', this.movie.id]);
+    this.router.navigate(['/event', this.event.id]);
   }
 }
