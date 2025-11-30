@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SeatPickerComponent } from '../seat-picker/seat-picker';
 
 import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
 import { Subscription } from 'rxjs';
+import { ReportService, ReportData } from '../../services/report.service';
+import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface Promo {
   code: string;
@@ -52,7 +56,10 @@ interface Ticket {
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
-export class Dashboard implements OnInit, OnDestroy {
+export class Dashboard implements OnInit, OnDestroy, AfterViewInit { // Import and implement AfterViewInit
+  @ViewChild('reportChart') reportChart: ElementRef<HTMLCanvasElement> | undefined;
+  private chart: Chart | undefined;
+
   activeChoice: 'create-event' | 'edit-event' | 'analytics-reports' | '' = 'analytics-reports';
 
   showChoice(choice: 'create-event' | 'edit-event' | 'analytics-reports' | '') {
@@ -68,6 +75,12 @@ export class Dashboard implements OnInit, OnDestroy {
   bookedSeats: string[] = []; // Added bookedSeats property
   unreadCount: number = 0; // Property to hold the unread count
   private notificationSubscription: Subscription | undefined; // To manage subscription
+
+  // Report properties
+  reportType: 'ticketSales' | 'revenue' | 'seatOccupancy' = 'ticketSales'; // Default report type
+  reportingPeriod: 'daily' | 'weekly' | 'monthly' = 'daily'; // Default period
+  generatedReportData: ReportData | null = null;
+  insufficientDataMessage: string | null = null;
 
   ticketCategories = [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
   seatConfiguration = [
@@ -114,7 +127,7 @@ export class Dashboard implements OnInit, OnDestroy {
               { row: 'BB', category: 'GEN' },
               { row: 'CC', category: 'GEN' },
               { row: 'DD', category: 'GEN' },
-              { row: 'EE', category: 'GEN' },
+              { row: 'EE', 'category': 'GEN' },
             ];
         this.promo = selectedEvent.promo ? JSON.parse(JSON.stringify(selectedEvent.promo)) : [];
         this.bookedSeats = selectedEvent.bookedSeats || []; // Populate bookedSeats
@@ -146,7 +159,8 @@ export class Dashboard implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private reportService: ReportService // Inject ReportService
   ) {}
 
   ngOnInit(): void {
@@ -177,11 +191,23 @@ export class Dashboard implements OnInit, OnDestroy {
 
     // Initial update of the count
     this.notificationService.updateUnreadCount();
+
+    this.generateReport();
+  }
+
+  ngAfterViewInit(): void {
+    // Call createChart here if data is already available from ngOnInit
+    if (this.generatedReportData) {
+      this.createChart();
+    }
   }
 
   ngOnDestroy(): void {
     if (this.notificationSubscription) {
       this.notificationSubscription.unsubscribe();
+    }
+    if (this.chart) {
+      this.chart.destroy();
     }
   }
 
@@ -381,5 +407,87 @@ export class Dashboard implements OnInit, OnDestroy {
 
   openNotifications() {
     this.router.navigate(['/notifications']);
+  }
+
+  generateReport() {
+    this.insufficientDataMessage = null;
+    this.generatedReportData = null;
+
+    let result: ReportData;
+    switch (this.reportType) {
+      case 'ticketSales':
+        result = this.reportService.generateTicketSales(this.reportingPeriod);
+        break;
+      case 'revenue':
+        result = this.reportService.generateRevenue(this.reportingPeriod);
+        break;
+      case 'seatOccupancy':
+        result = this.reportService.generateSeatOccupancy(this.reportingPeriod);
+        break;
+      default:
+        return;
+    }
+
+    if (result.message) {
+      this.insufficientDataMessage = result.message;
+    } else {
+      this.generatedReportData = result;
+      // Call createChart directly if ViewChild is resolved, otherwise ngAfterViewInit will handle it
+      if (this.reportChart) {
+        this.createChart();
+      }
+    }
+  }
+
+  createChart() {
+    if (!this.reportChart || !this.generatedReportData) {
+      return;
+    }
+
+    const canvas = this.reportChart.nativeElement;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      return;
+    }
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    this.chart = new Chart(ctx, {
+      type: this.generatedReportData.chartType as ChartType,
+      data: {
+        labels: this.generatedReportData.labels,
+        datasets: [
+          {
+            label: this.generatedReportData.type,
+            data: this.generatedReportData.series,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    });
+  }
+
+  downloadReportAsPdf() {
+    const data = document.querySelector('.report-display');
+    if (data) {
+      html2canvas(data as HTMLElement).then(canvas => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = canvas.height * width / canvas.width;
+        pdf.addImage(contentDataURL, 'PNG', 0, 0, width, height);
+        pdf.save('report.pdf');
+      });
+    }
   }
 }

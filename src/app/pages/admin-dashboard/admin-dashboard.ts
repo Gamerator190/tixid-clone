@@ -1,9 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'; // Add OnDestroy
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NotificationService } from '../../services/notification.service'; // Import NotificationService
-import { Subscription } from 'rxjs'; // Import Subscription
+import { NotificationService } from '../../services/notification.service';
+import { Subscription } from 'rxjs';
+import { ReportService } from '../../services/report.service';
+import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface User {
   name: string;
@@ -21,6 +25,7 @@ interface Event {
   time: string;
   description: string;
   location: string;
+  email?: string;
   poster?: string;
   isNew?: boolean;
   isSpecial?: boolean;
@@ -45,20 +50,36 @@ interface Ticket {
   isRead: boolean;
 }
 
+// ReportData interface (copied from ReportService for consistency)
+interface ReportData {
+  type: 'ticketSales' | 'revenue' | 'seatOccupancy' | 'auditoriumBookings' | 'eventsHosted' | 'utilizationStatistics';
+  period: string;
+  labels: string[]; // For chart X-axis (e.g., dates, months)
+  series: number[]; // For chart Y-axis (e.g., counts, amounts)
+  tableData: { label: string, value: any }[]; // For detailed table display
+  message?: string; // For insufficient data
+  chartType?: ChartType;
+}
+
+
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestroy
+export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Import and implement AfterViewInit
+  @ViewChild('reportChart') reportChart: ElementRef<HTMLCanvasElement> | undefined;
+  private chart: Chart | undefined;
+
   activeChoice: 'analytics-reports' | 'register' | '' = 'analytics-reports';
+  isAdmin: boolean = false; // New property to determine if the user is an admin
 
   // User properties
   userName = 'Admin';
   showMenu = false;
-  unreadCount: number = 0; // Property to hold the unread count
-  private notificationSubscription: Subscription | undefined; // To manage subscription
+  unreadCount: number = 0;
+  private notificationSubscription: Subscription | undefined;
 
   // Register form properties
   name = '';
@@ -70,9 +91,18 @@ export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestro
   organization = '';
   isLoading = false;
 
+  // Report properties
+  reportType: 'ticketSales' | 'revenue' | 'seatOccupancy' | 'auditoriumBookings' | 'eventsHosted' | 'utilizationStatistics' = 'auditoriumBookings';
+  reportingPeriod: 'daily' | 'weekly' | 'monthly' | 'custom' = 'daily'; // Added 'custom'
+  startDate: string = ''; // For custom range
+  endDate: string = ''; // For custom range
+  generatedReportData: ReportData | null = null;
+  insufficientDataMessage: string | null = null;
+
   constructor(
     private router: Router,
-    private notificationService: NotificationService // Inject service
+    private notificationService: NotificationService,
+    private reportService: ReportService // Inject ReportService
   ) {}
 
   ngOnInit(): void {
@@ -86,8 +116,10 @@ export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestro
     try {
       const user = JSON.parse(userJson);
       this.userName = user.name || 'Admin';
+      this.isAdmin = user.role === 'auditorium_admin'; // Set isAdmin based on user role
     } catch {
       this.userName = 'Admin';
+      this.isAdmin = false;
     }
 
     // Subscribe to unread count
@@ -97,11 +129,27 @@ export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestro
 
     // Initial update of the count
     this.notificationService.updateUnreadCount();
+
+    // Default report for admin
+    if (this.isAdmin) {
+      this.reportType = 'auditoriumBookings';
+    }
+    this.generateReport();
   }
 
-  ngOnDestroy(): void { // Lifecycle hook to unsubscribe
+  ngAfterViewInit(): void {
+    // Call createChart here if data is already available from ngOnInit
+    if (this.generatedReportData) {
+      this.createChart();
+    }
+  }
+
+  ngOnDestroy(): void {
     if (this.notificationSubscription) {
       this.notificationSubscription.unsubscribe();
+    }
+    if (this.chart) {
+      this.chart.destroy();
     }
   }
 
@@ -215,4 +263,92 @@ export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestro
       this.showChoice('');
     }, 600);
   }
-} // Add missing closing brace for AdminDashboard class
+
+  // New methods for report generation
+  generateReport() {
+    this.insufficientDataMessage = null;
+    this.generatedReportData = null;
+
+    let result: ReportData;
+    switch (this.reportType) {
+      case 'ticketSales':
+      case 'auditoriumBookings': // Map auditoriumBookings to ticketSales
+        result = this.reportService.generateTicketSales(this.reportingPeriod);
+        break;
+      case 'revenue':
+        result = this.reportService.generateRevenue(this.reportingPeriod);
+        break;
+      case 'seatOccupancy':
+      case 'utilizationStatistics': // Map utilizationStatistics to seatOccupancy
+        result = this.reportService.generateSeatOccupancy(this.reportingPeriod);
+        break;
+      case 'eventsHosted': // New report type
+        result = this.reportService.generateEventsHosted(this.reportingPeriod);
+        break;
+      default:
+        return;
+    }
+
+    if (result.message) {
+      this.insufficientDataMessage = result.message;
+    } else {
+      this.generatedReportData = result;
+      // Call createChart directly if ViewChild is resolved, otherwise ngAfterViewInit will handle it
+      if (this.reportChart) {
+        this.createChart();
+      }
+    }
+  }
+
+  createChart() {
+    if (!this.reportChart || !this.generatedReportData) {
+      return;
+    }
+
+    const canvas = this.reportChart.nativeElement;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      return;
+    }
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    this.chart = new Chart(ctx, {
+      type: this.generatedReportData.chartType as ChartType,
+      data: {
+        labels: this.generatedReportData.labels,
+        datasets: [
+          {
+            label: this.generatedReportData.type,
+            data: this.generatedReportData.series,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    });
+  }
+
+  downloadReportAsPdf() {
+    const data = document.querySelector('.report-display');
+    if (data) {
+      html2canvas(data as HTMLElement).then(canvas => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = canvas.height * width / canvas.width;
+        pdf.addImage(contentDataURL, 'PNG', 0, 0, width, height);
+        pdf.save('report.pdf');
+      });
+    }
+  }
+}

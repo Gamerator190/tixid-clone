@@ -57,18 +57,94 @@
       <div class="card-body">
         <h2 class="card-title">Analytics & Reports</h2>
 
-        <div class="placeholder-content">
-          <div class="placeholder-icon">📈</div>
-          <p class="placeholder-text">Analytics dashboard coming soon</p>
-          <p style="font-size: 12px; color: #9ca3af; margin-top: 8px">
-            Real-time event metrics, ticket sales, and user engagement data will appear here
-          </p>
+        <!-- Report Type Selection -->
+        <div class="form-group">
+          <label for="report-type">Report Type</label>
+          <select id="report-type" [(ngModel)]="reportType" name="reportType">
+            @if (isAdmin) {
+              <option value="auditoriumBookings">Auditorium Bookings</option>
+              <option value="eventsHosted">Events Hosted</option>
+              <option value="utilizationStatistics">Utilization Statistics</option>
+            } @else {
+              <option value="ticketSales">Ticket Sales</option>
+              <option value="revenue">Revenue</option>
+              <option value="seatOccupancy">Seat Occupancy</option>
+            }
+          </select>
         </div>
 
+        <!-- Reporting Period Selection -->
+        <div class="form-group">
+          <label for="reporting-period">Reporting Period</label>
+          <select id="reporting-period" [(ngModel)]="reportingPeriod" name="reportingPeriod">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <!-- Auditorium Admin specific: Custom range -->
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+
+        <!-- Custom Date Range (Conditional Display) -->
+        @if (reportingPeriod === 'custom') {
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" />
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" />
+          </div>
+        </div>
+        }
+
         <div class="form-actions">
+          <button class="form-btn form-btn-submit" type="button" (click)="generateReport()">
+            Generate Report
+          </button>
+          <button
+            class="form-btn form-btn-cancel"
+            type="button"
+            (click)="downloadReportAsPdf()"
+            [disabled]="!generatedReportData"
+          >
+            Download PDF
+          </button>
           <button class="form-btn form-btn-cancel" type="button" (click)="showChoice('')">
             Close
           </button>
+        </div>
+
+        <!-- Report Display Area -->
+        @if (insufficientDataMessage) {
+          <div class="report-message error">{{ insufficientDataMessage }}</div>
+        }
+        <div class="report-display" [hidden]="!generatedReportData">
+          <h3>{{ generatedReportData?.type | titlecase }} Report ({{ generatedReportData?.period | titlecase }})</h3>
+
+          <!-- Table Display -->
+          <div class="report-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of generatedReportData?.tableData">
+                  <td>{{ row.label }}</td>
+                  <td>{{ row.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Chart Display -->
+          <div class="report-chart">
+            <canvas #reportChart></canvas>
+          </div>
         </div>
       </div>
     </div>

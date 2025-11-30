@@ -199,7 +199,7 @@ export class CheckoutComponent implements OnInit {
       time: this.time, // This is event time, so keep it for consistency
       seats: this.seatSelections.map((s) => s.seat),
       total: this.finalTotal,
-      purchaseDate: new Date().toLocaleString('id-ID'), // Store purchase date
+      purchaseDate: new Date().toISOString(), // Store purchase date
       seatDetails: this.seatSelections,
       categoryTable: this.categoryTable,
       appliedPromo: this.appliedPromo,

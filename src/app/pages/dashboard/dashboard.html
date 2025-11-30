@@ -7,9 +7,8 @@
 
     <div class="top-actions">
       <button class="notif-btn" type="button" (click)="openNotifications()" title="Notifikasi">
-        🔔
-        @if (unreadCount > 0) {
-          <span class="notification-badge">{{ unreadCount }}</span>
+        🔔 @if (unreadCount > 0) {
+        <span class="notification-badge">{{ unreadCount }}</span>
         }
       </button>
 
@@ -181,7 +180,11 @@
         <div class="seat-config-grid">
           <div *ngFor="let config of seatConfiguration" class="form-group">
             <label>{{config.row}}</label>
-            <select [(ngModel)]="config.category" name="seat-row-{{config.row}}" (change)="updateSeatConfiguration()">
+            <select
+              [(ngModel)]="config.category"
+              name="seat-row-{{config.row}}"
+              (change)="updateSeatConfiguration()"
+            >
               <option *ngFor="let cat of ticketCategories" [value]="cat.shortName">
                 {{cat.name}} ({{cat.shortName}})
               </option>
@@ -247,21 +250,85 @@
       <div class="card-body">
         <h2 class="card-title">Analytics & Reports</h2>
 
-        <div class="placeholder-content">
-          <div class="placeholder-icon">📈</div>
-          <p class="placeholder-text">Analytics dashboard coming soon</p>
-          <p style="font-size: 12px; color: #9ca3af; margin-top: 8px">
-            Real-time event metrics, ticket sales, and user engagement data will appear here
-          </p>
+        <!-- Report Type Selection -->
+        <div class="form-group">
+          <label for="report-type">Report Type</label>
+          <select id="report-type" [(ngModel)]="reportType" name="reportType">
+            <option value="ticketSales">Ticket Sales</option>
+            <option value="revenue">Revenue</option>
+            <option value="seatOccupancy">Seat Occupancy</option>
+          </select>
+        </div>
+
+        <!-- Reporting Period Selection -->
+        <div class="form-group">
+          <label for="reporting-period">Reporting Period</label>
+          <select id="reporting-period" [(ngModel)]="reportingPeriod" name="reportingPeriod">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
         </div>
 
         <div class="form-actions">
+          <button class="form-btn form-btn-submit" type="button" (click)="generateReport()">
+            Generate Report
+          </button>
+          <button
+            class="form-btn form-btn-cancel"
+            type="button"
+            (click)="downloadReportAsPdf()"
+            [disabled]="!generatedReportData"
+          >
+            Download PDF
+          </button>
           <button class="form-btn form-btn-cancel" type="button" (click)="showChoice('')">
             Close
           </button>
         </div>
-      </div>
-    </div>
-    }
+
+        <!-- Report Display Area -->
+        @if (insufficientDataMessage) {
+        <div class="report-message error">{{ insufficientDataMessage }}</div>
+        }
+        <div class="report-display" [hidden]="!generatedReportData">
+          <h3>
+            {{ generatedReportData?.type | titlecase }} Report ({{ generatedReportData?.period |
+            titlecase }})
+          </h3>
+
+          <!-- Table Display -->
+          <div class="report-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of generatedReportData?.tableData">
+                  <td>{{ row.label }}</td>
+                  <td>{{ row.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+                    <!-- Chart Display -->
+
+                    <div class="report-chart">
+
+                      <canvas #reportChart></canvas>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              }
   </main>
 </div>
