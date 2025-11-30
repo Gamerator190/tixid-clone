@@ -26,6 +26,12 @@
       <span>{{ event.date }}</span>
       <span class="dot">•</span>
       <span>{{ event.time }}</span>
+      <span class="dot">•</span>
+      @if (event.availableSeats > 0) {
+      <span>{{ event.availableSeats }} seats left</span>
+      } @else {
+      <span class="sold-out">Sold Out</span>
+      }
     </div>
 
     <h3 class="subtitle">EVENT DESCRIPTION</h3>

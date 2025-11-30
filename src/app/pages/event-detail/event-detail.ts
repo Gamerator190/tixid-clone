@@ -2,6 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
+// Define the Event interface, consistent with home.ts and dashboard.ts
+interface Event {
+  id: number | string;
+  title: string;
+  date: string;
+  time: string;
+  description: string;
+  location: string;
+  poster?: string;
+  isNew?: boolean;
+  isSpecial?: boolean;
+  promo?: any[];
+  ticketCategories?: any[];
+  seatConfiguration?: { row: string; category: string }[];
+  bookedSeats?: string[];
+  availableSeats: number; // Required
+}
+
 @Component({
   selector: 'app-event-detail',
   standalone: true,
@@ -10,7 +28,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './event-detail.css',
 })
 export class EventDetailComponent implements OnInit {
-  event: any = null;
+  event: Event | null = null; // Cast to Event type
 
   constructor(
     private route: ActivatedRoute,
@@ -27,12 +45,22 @@ export class EventDetailComponent implements OnInit {
       events = JSON.parse(eventsJson);
     }
 
-    this.event = events.find((m: any) => m.id === id);
+    const foundEvent = events.find((m: any) => m.id === id); // Find the event
 
-    if (!this.event) {
+    if (!foundEvent) {
       alert('Event not found');
       this.router.navigate(['/home']);
+      return;
     }
+
+    // Calculate availableSeats and assign to this.event
+    const totalSeats = foundEvent.seatConfiguration ? foundEvent.seatConfiguration.length * 30 : 0;
+    const bookedSeatsCount = foundEvent.bookedSeats ? foundEvent.bookedSeats.length : 0;
+    
+    this.event = {
+      ...foundEvent,
+      availableSeats: totalSeats - bookedSeatsCount
+    };
   }
 
   goHome() {
@@ -40,6 +68,9 @@ export class EventDetailComponent implements OnInit {
   }
 
   buyTicket() {
-    this.router.navigate(['/event', this.event.id, this.event.time, 'seats']);
+    // Ensure this.event is not null before accessing its properties
+    if (this.event) {
+      this.router.navigate(['/event', this.event.id, this.event.time, 'seats']);
+    }
   }
 }
