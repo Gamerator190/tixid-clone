@@ -14,6 +14,9 @@ interface Event {
   isSpecial?: boolean;
   promoCode?: string;
   discount?: number;
+  bookedSeats?: string[]; // Added bookedSeats
+  seatConfiguration?: { row: string; category: string }[]; // Added seatConfiguration
+  availableSeats: number; // Made availableSeats required
 }
 
 @Component({
@@ -42,6 +45,7 @@ export class HomeComponent implements OnInit {
       description: 'A conference about the future of technology.',
       isNew: true,
       poster: 'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg',
+      availableSeats: 300, // Default for hardcoded events
     },
     {
       id: 2,
@@ -52,6 +56,7 @@ export class HomeComponent implements OnInit {
       description: 'A workshop for creative minds.',
       isNew: true,
       poster: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg',
+      availableSeats: 300, // Default for hardcoded events
     },
     {
       id: 3,
@@ -61,6 +66,7 @@ export class HomeComponent implements OnInit {
       time: '10:00',
       description: 'A conference for future leaders.',
       poster: 'https://images.pexels.com/photos/1181395/pexels-photo-1181395.jpeg',
+      availableSeats: 300, // Default for hardcoded events
     },
   ];
 
@@ -88,16 +94,28 @@ export class HomeComponent implements OnInit {
         const filteredHardcodedEvents = this.hardcodedEvents.filter(
           (e) => !storedEventIds.has(e.id),
         );
-        this.events = [...storedEvents, ...filteredHardcodedEvents];
-      } catch (e) {
-        console.error('Error parsing events from localStorage', e);
-        this.events = this.hardcodedEvents;
-      }
-    } else {
-      this.events = this.hardcodedEvents;
-    }
-    localStorage.setItem('pf-events', JSON.stringify(this.events));
-  }
+            this.events = [...storedEvents, ...filteredHardcodedEvents].map(event => {
+              const totalSeats = event.seatConfiguration ? event.seatConfiguration.length * 30 : 0; // Assuming 30 seats per row
+              const bookedSeatsCount = event.bookedSeats ? event.bookedSeats.length : 0;
+              return {
+                ...event,
+                availableSeats: totalSeats - bookedSeatsCount
+              };
+            });
+          } catch (e) {
+            console.error('Error parsing events from localStorage', e);
+            this.events = this.hardcodedEvents.map(event => ({
+              ...event,
+              availableSeats: (event.seatConfiguration ? event.seatConfiguration.length * 30 : 0) - (event.bookedSeats ? event.bookedSeats.length : 0)
+            }));
+          }
+        } else {
+          this.events = this.hardcodedEvents.map(event => ({
+            ...event,
+            availableSeats: (event.seatConfiguration ? event.seatConfiguration.length * 30 : 0) - (event.bookedSeats ? event.bookedSeats.length : 0)
+          }));
+        }
+        localStorage.setItem('pf-events', JSON.stringify(this.events));  }
 
   toggleUserMenu() {
     this.showMenu = !this.showMenu;

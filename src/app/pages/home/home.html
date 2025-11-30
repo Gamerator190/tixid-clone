@@ -51,6 +51,10 @@
         <p class="hero-label">Now Showing</p>
         <h1 class="hero-title">{{ events[0].title }}</h1>
         <p class="hero-subtitle">{{ events[0].location }}</p>
+        <p class="hero-availability">
+          @if (events[0].availableSeats > 0) { {{ events[0].availableSeats }} tickets left } @else {
+          Sold Out }
+        </p>
         <button class="hero-btn" type="button" (click)="goEvent(events[0].id)">See Details</button>
       </div>
       <div class="hero-poster">
@@ -109,10 +113,14 @@
           <div class="event-info">
             <div class="title">{{ event.title }}</div>
             <div class="location">{{ event.location }}</div>
-            <div class="meta">
-              <span>{{ event.date }}</span>
-              <span class="dot">•</span>
-              <span>{{ event.time }}</span>
+            <div class="meta vertical">
+              <div class="date-time">{{ event.date }}</div>
+              <div class="date-time">{{ event.time }}</div>
+              @if (event.availableSeats > 0) {
+              <div class="availability">{{ event.availableSeats }} seats left</div>
+              } @else {
+              <div class="availability sold-out">Sold Out</div>
+              }
             </div>
           </div>
         </div>
