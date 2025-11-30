@@ -17,6 +17,7 @@ interface Event {
   ticketCategories?: any[];
   seatConfiguration?: { row: string; category: string }[];
   bookedSeats?: string[];
+  availableSeats: number;
 }
 
 interface SeatSelection {
@@ -99,6 +100,59 @@ export class ETicketComponent implements OnInit {
   }
 
   goBack() {
+    this.router.navigate(['/my-tickets']);
+  }
+
+  get isCancelDisabled(): boolean {
+    if (!this.ticket || !this.ticket.event) return true;
+    const eventDate = new Date(this.ticket.event.date);
+    const today = new Date();
+    const diffTime = eventDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays < 7;
+  }
+
+  cancelBooking() {
+    if (!this.ticket) return;
+
+    const eventDate = new Date(this.ticket.event.date);
+    const today = new Date();
+    const diffTime = eventDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 7) {
+      alert('Booking can only be cancelled 7 days or more prior to the event.');
+      return;
+    }
+
+    // 1. Remove ticket from 'pf-tickets'
+    const rawTickets = localStorage.getItem('pf-tickets');
+    if (rawTickets) {
+      const tickets: Ticket[] = JSON.parse(rawTickets);
+      const updatedTickets = tickets.filter((_, i) => i !== this.index); // Filter out the current ticket
+      localStorage.setItem('pf-tickets', JSON.stringify(updatedTickets));
+    }
+
+    // 2. Update 'bookedSeats' for the event in 'pf-events'
+    const rawEvents = localStorage.getItem('pf-events');
+    if (rawEvents) {
+      const events: Event[] = JSON.parse(rawEvents);
+      const eventIndex = events.findIndex(e => e.id === this.ticket?.event.id);
+
+      if (eventIndex !== -1) {
+        const updatedEvent = { ...events[eventIndex] };
+        const cancelledSeatIds = this.ticket.seats; // Get seats from the cancelled ticket
+        updatedEvent.bookedSeats = updatedEvent.bookedSeats?.filter(seatId => !cancelledSeatIds.includes(seatId)) || [];
+        // Recalculate availableSeats for consistency
+        const totalSeats = updatedEvent.seatConfiguration ? updatedEvent.seatConfiguration.length * 30 : 0;
+        updatedEvent.availableSeats = totalSeats - updatedEvent.bookedSeats.length;
+
+        events[eventIndex] = updatedEvent;
+        localStorage.setItem('pf-events', JSON.stringify(events));
+      }
+    }
+
+    alert('Booking cancelled successfully!');
     this.router.navigate(['/my-tickets']);
   }
 }

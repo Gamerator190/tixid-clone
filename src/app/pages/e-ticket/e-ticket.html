@@ -65,5 +65,13 @@
     </div>
   </div>
 
+  <button
+    class="cancel-btn"
+    (click)="cancelBooking()"
+    [disabled]="isCancelDisabled"
+  >
+    Cancel Booking
+  </button>
+
   <div class="hint">Screenshot this page to save the E-Ticket in your gallery 📱</div>
 </div>
