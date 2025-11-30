@@ -38,11 +38,11 @@ interface Ticket {
 }
 
 @Component({
-  selector: 'app-my-tickets',
+  selector: 'app-notifications',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './my-tickets.html',
-  styleUrl: './my-tickets.css',
+  templateUrl: './notifications.html',
+  styleUrl: './notifications.css',
 })
 export class MyTicketsComponent implements OnInit {
   tickets: Ticket[] = [];
@@ -95,6 +95,6 @@ export class MyTicketsComponent implements OnInit {
   }
 
   openTicket(i: number) {
-    this.router.navigate(['/my-tickets', i]);
+    this.router.navigate(['/notifications', i]);
   }
 }

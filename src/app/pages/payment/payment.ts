@@ -53,8 +53,8 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     const ticketDataString = this.route.snapshot.paramMap.get('ticketData');
@@ -62,9 +62,17 @@ export class PaymentComponent implements OnInit {
       try {
         this.ticket = JSON.parse(ticketDataString);
         // Ensure availableSeats is calculated for the event if not present (for old event data)
-        if (this.ticket && this.ticket.event && typeof this.ticket.event.availableSeats === 'undefined') {
-          const totalSeats = this.ticket.event.seatConfiguration ? this.ticket.event.seatConfiguration.length * 30 : 0;
-          const bookedSeatsCount = this.ticket.event.bookedSeats ? this.ticket.event.bookedSeats.length : 0;
+        if (
+          this.ticket &&
+          this.ticket.event &&
+          typeof this.ticket.event.availableSeats === 'undefined'
+        ) {
+          const totalSeats = this.ticket.event.seatConfiguration
+            ? this.ticket.event.seatConfiguration.length * 30
+            : 0;
+          const bookedSeatsCount = this.ticket.event.bookedSeats
+            ? this.ticket.event.bookedSeats.length
+            : 0;
           this.ticket.event.availableSeats = totalSeats - bookedSeatsCount;
         }
       } catch (e) {
@@ -78,9 +86,6 @@ export class PaymentComponent implements OnInit {
 
   processPayment() {
     if (!this.ticket) return;
-
-    // Simulate payment success
-    alert(`Payment successful via ${this.paymentOption}!`);
 
     // Perform localStorage operations (copied from CheckoutComponent's bayar method)
     // 1. Save the ticket to 'pf-tickets'
@@ -98,12 +103,11 @@ export class PaymentComponent implements OnInit {
       if (eventIndex !== -1) {
         const updatedEvent = { ...allEvents[eventIndex] };
         const bookedSeatsToAdd = this.ticket.seats;
-        updatedEvent.bookedSeats = [
-          ...(updatedEvent.bookedSeats || []),
-          ...bookedSeatsToAdd,
-        ];
+        updatedEvent.bookedSeats = [...(updatedEvent.bookedSeats || []), ...bookedSeatsToAdd];
         // Recalculate availableSeats for consistency
-        const totalSeats = updatedEvent.seatConfiguration ? updatedEvent.seatConfiguration.length * 30 : 0;
+        const totalSeats = updatedEvent.seatConfiguration
+          ? updatedEvent.seatConfiguration.length * 30
+          : 0;
         updatedEvent.availableSeats = totalSeats - updatedEvent.bookedSeats.length;
 
         allEvents[eventIndex] = updatedEvent;
@@ -111,8 +115,8 @@ export class PaymentComponent implements OnInit {
       }
     }
 
-    // Redirect to home page
-    this.router.navigate(['/home']);
+    // Redirect to notifications page
+    this.router.navigate(['/notifications']);
   }
 
   // Helper for displaying currency
@@ -125,12 +129,20 @@ export class PaymentComponent implements OnInit {
       const eventId = this.ticket.event.id;
       const eventTime = this.ticket.time; // Use ticket.time (event time)
       const seatData = this.ticket.seatDetails
-                       ? this.ticket.seatDetails.map(s => `${s.seat}:${s.typeCode}`).join(',')
-                       : this.ticket.seats.map(s => `${s}:REG`).join(','); // Fallback logic consistent with checkout
+        ? this.ticket.seatDetails.map((s) => `${s.seat}:${s.typeCode}`).join(',')
+        : this.ticket.seats.map((s) => `${s}:REG`).join(','); // Fallback logic consistent with checkout
 
-      const categoryTableString = this.ticket.categoryTable ? JSON.stringify(this.ticket.categoryTable) : '';
+      const categoryTableString = this.ticket.categoryTable
+        ? JSON.stringify(this.ticket.categoryTable)
+        : '';
 
-      this.router.navigate(['/checkout', eventId, eventTime, seatData, { categoryTable: categoryTableString }]);
+      this.router.navigate([
+        '/checkout',
+        eventId,
+        eventTime,
+        seatData,
+        { categoryTable: categoryTableString },
+      ]);
     } else {
       this.router.navigate(['/home']); // Fallback if no ticket data
     }

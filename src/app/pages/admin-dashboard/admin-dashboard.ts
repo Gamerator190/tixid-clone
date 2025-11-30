@@ -71,7 +71,7 @@ export class AdminDashboard implements OnInit {
   }
 
   openNotifications() {
-    alert('Belum ada notifikasi baru 😊');
+    this.router.navigate(['/notifications']);
   }
 
   private getUsersFromStorage(): User[] {

@@ -358,6 +358,6 @@ export class Dashboard {
   }
 
   openNotifications() {
-    alert('There are no new notifications 😊');
+    this.router.navigate(['/notifications']);
   }
 }

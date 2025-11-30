@@ -59,7 +59,7 @@ export class ETicketComponent implements OnInit {
 
     const raw = localStorage.getItem('pf-tickets');
     if (!raw) {
-      this.router.navigate(['/my-tickets']);
+      this.router.navigate(['/notifications']);
       return;
     }
 
@@ -68,7 +68,7 @@ export class ETicketComponent implements OnInit {
       this.ticket = list[this.index];
 
       if (!this.ticket) {
-        this.router.navigate(['/my-tickets']);
+        this.router.navigate(['/notifications']);
         return;
       }
 
@@ -80,7 +80,7 @@ export class ETicketComponent implements OnInit {
         }));
       }
     } catch (err) {
-      this.router.navigate(['/my-tickets']);
+      this.router.navigate(['/notifications']);
     }
   }
 
@@ -100,7 +100,7 @@ export class ETicketComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/my-tickets']);
+    this.router.navigate(['/notifications']);
   }
 
   get isCancelDisabled(): boolean {
@@ -137,14 +137,17 @@ export class ETicketComponent implements OnInit {
     const rawEvents = localStorage.getItem('pf-events');
     if (rawEvents) {
       const events: Event[] = JSON.parse(rawEvents);
-      const eventIndex = events.findIndex(e => e.id === this.ticket?.event.id);
+      const eventIndex = events.findIndex((e) => e.id === this.ticket?.event.id);
 
       if (eventIndex !== -1) {
         const updatedEvent = { ...events[eventIndex] };
         const cancelledSeatIds = this.ticket.seats; // Get seats from the cancelled ticket
-        updatedEvent.bookedSeats = updatedEvent.bookedSeats?.filter(seatId => !cancelledSeatIds.includes(seatId)) || [];
+        updatedEvent.bookedSeats =
+          updatedEvent.bookedSeats?.filter((seatId) => !cancelledSeatIds.includes(seatId)) || [];
         // Recalculate availableSeats for consistency
-        const totalSeats = updatedEvent.seatConfiguration ? updatedEvent.seatConfiguration.length * 30 : 0;
+        const totalSeats = updatedEvent.seatConfiguration
+          ? updatedEvent.seatConfiguration.length * 30
+          : 0;
         updatedEvent.availableSeats = totalSeats - updatedEvent.bookedSeats.length;
 
         events[eventIndex] = updatedEvent;
@@ -153,6 +156,6 @@ export class ETicketComponent implements OnInit {
     }
 
     alert('Booking cancelled successfully!');
-    this.router.navigate(['/my-tickets']);
+    this.router.navigate(['/notifications']);
   }
 }

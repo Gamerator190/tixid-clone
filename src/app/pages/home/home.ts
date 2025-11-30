@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Remove ActivatedRoute
 
 interface Event {
   id: number | string;
@@ -55,12 +55,12 @@ export class HomeComponent implements OnInit {
     if (eventsFromStorage) {
       try {
         const storedEvents: Event[] = JSON.parse(eventsFromStorage);
-        this.events = storedEvents.map(event => {
+        this.events = storedEvents.map((event) => {
           const totalSeats = event.seatConfiguration ? event.seatConfiguration.length * 30 : 0;
           const bookedSeatsCount = event.bookedSeats ? event.bookedSeats.length : 0;
           return {
             ...event,
-            availableSeats: totalSeats - bookedSeatsCount
+            availableSeats: totalSeats - bookedSeatsCount,
           };
         });
       } catch (e) {
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
   }
 
   openNotifications() {
-    alert('There are no new notifications 😊');
+    this.router.navigate(['/notifications']);
   }
 
   goEvent(id: number | string) {
