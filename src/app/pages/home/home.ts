@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // Remove ActivatedRoute
+import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service'; // Import NotificationService
+import { Subscription } from 'rxjs'; // Import Subscription
 
 interface Event {
   id: number | string;
@@ -19,6 +21,20 @@ interface Event {
   availableSeats: number; // Made availableSeats required
 }
 
+interface Ticket {
+  event: Event;
+  poster: string;
+  time: string;
+  seats: string[];
+  total: number;
+  purchaseDate: string;
+  seatDetails?: any[];
+  categoryTable?: Record<string, { name: string; price: number }>;
+  appliedPromo?: any;
+  discountAmount?: number;
+  isRead: boolean; // Added isRead flag
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -26,12 +42,17 @@ interface Event {
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy { // Implement OnDestroy
   userName = 'Guest';
   showMenu = false;
   userRole = '';
+  unreadCount: number = 0; // Property to hold the unread count
+  private notificationSubscription: Subscription | undefined; // To manage subscription
 
-  constructor(public router: Router) {}
+  constructor(
+    public router: Router,
+    private notificationService: NotificationService // Inject service
+  ) {}
 
   events: Event[] = [];
 
@@ -69,6 +90,20 @@ export class HomeComponent implements OnInit {
       }
     } else {
       this.events = [];
+    }
+
+    // Subscribe to unread count
+    this.notificationSubscription = this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+
+    // Initial update of the count
+    this.notificationService.updateUnreadCount();
+  }
+
+  ngOnDestroy(): void { // Lifecycle hook to unsubscribe
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 

@@ -8,6 +8,9 @@
     <div class="top-actions">
       <button class="notif-btn" type="button" (click)="openNotifications()" title="Notifikasi">
         🔔
+        @if (unreadCount > 0) {
+          <span class="notification-badge">{{ unreadCount }}</span>
+        }
       </button>
 
       <div class="user-pill" (click)="toggleUserMenu()">

@@ -31,6 +31,7 @@ interface Ticket {
   categoryTable?: Record<string, { name: string; price: number }>;
   appliedPromo?: any;
   discountAmount?: number;
+  isRead: boolean; // Added isRead flag
 }
 
 interface TicketType {
@@ -203,6 +204,7 @@ export class CheckoutComponent implements OnInit {
       categoryTable: this.categoryTable,
       appliedPromo: this.appliedPromo,
       discountAmount: this.discountAmount,
+      isRead: false, // Mark as unread by default
     };
 
     // Serialize the ticket object and navigate to payment page

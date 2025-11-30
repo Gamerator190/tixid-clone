@@ -4,15 +4,17 @@
     <div class="brand">
       <div class="logo">PLAN<span>FUN</span></div>
 
-      <div class="location">
+      <!--<div class="location">
         <span class="city">Bali</span>
         <span class="change">Change</span>
-      </div>
+      </div>-->
     </div>
 
     <div class="top-actions">
       <button class="notif-btn" type="button" (click)="openNotifications()" title="Notifikasi">
-        🔔
+        🔔 @if (unreadCount > 0) {
+        <span class="notification-badge">{{ unreadCount }}</span>
+        }
       </button>
 
       <div class="user-pill" (click)="toggleUserMenu()">
@@ -50,6 +52,8 @@
       <div class="hero-text">
         <p class="hero-label">Now Showing</p>
         <h1 class="hero-title">{{ events[0].title }}</h1>
+        <p class="hero-subtitle">{{ events[0].date }}</p>
+        <p class="hero-subtitle">{{ events[0].time }}</p>
         <p class="hero-subtitle">{{ events[0].location }}</p>
         <p class="hero-subtitle">
           @if (events[0].availableSeats > 0) { {{ events[0].availableSeats }} seats left } @else {

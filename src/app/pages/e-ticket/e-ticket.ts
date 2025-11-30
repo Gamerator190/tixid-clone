@@ -36,6 +36,7 @@ interface Ticket {
   categoryTable?: Record<string, { name: string; price: number }>;
   appliedPromo?: any;
   discountAmount?: number;
+  isRead: boolean; // Added isRead flag
 }
 
 @Component({

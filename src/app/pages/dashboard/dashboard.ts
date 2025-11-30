@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SeatPickerComponent } from '../seat-picker/seat-picker';
 
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
+import { Subscription } from 'rxjs';
 
 interface Promo {
   code: string;
@@ -13,7 +15,7 @@ interface Promo {
 }
 
 interface Event {
-  id: number;
+  id: number | string;
   title: string;
   date: string;
   time: string;
@@ -26,7 +28,22 @@ interface Event {
   promo?: Promo[];
   ticketCategories?: { name: string; shortName: string; price: number }[];
   seatConfiguration?: { row: string; category: string }[];
-  bookedSeats?: string[]; // Added bookedSeats
+  bookedSeats?: string[];
+  availableSeats: number;
+}
+
+interface Ticket {
+  event: Event;
+  poster: string;
+  time: string;
+  seats: string[];
+  total: number;
+  purchaseDate: string;
+  seatDetails?: any[];
+  categoryTable?: Record<string, { name: string; price: number }>;
+  appliedPromo?: any;
+  discountAmount?: number;
+  isRead: boolean;
 }
 
 @Component({
@@ -35,7 +52,7 @@ interface Event {
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
-export class Dashboard {
+export class Dashboard implements OnInit, OnDestroy {
   activeChoice: 'create-event' | 'edit-event' | 'analytics-reports' | '' = 'analytics-reports';
 
   showChoice(choice: 'create-event' | 'edit-event' | 'analytics-reports' | '') {
@@ -49,6 +66,8 @@ export class Dashboard {
   selectedEventId: number | null = null;
   promo: Promo[] = [];
   bookedSeats: string[] = []; // Added bookedSeats property
+  unreadCount: number = 0; // Property to hold the unread count
+  private notificationSubscription: Subscription | undefined; // To manage subscription
 
   ticketCategories = [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
   seatConfiguration = [
@@ -125,7 +144,10 @@ export class Dashboard {
     }
   }
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     const userJson = localStorage.getItem('pf-current-user');
@@ -146,6 +168,20 @@ export class Dashboard {
       }
     } catch {
       this.userName = 'Organizer';
+    }
+
+    // Subscribe to unread count
+    this.notificationSubscription = this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+
+    // Initial update of the count
+    this.notificationService.updateUnreadCount();
+  }
+
+  ngOnDestroy(): void {
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 
@@ -242,22 +278,20 @@ export class Dashboard {
         }
       }
 
+      // Calculate availableSeats before calling saveEvent
+      const totalSeats = this.seatConfiguration ? this.seatConfiguration.length * 30 : 0;
+      const bookedSeatsCount = this.bookedSeats ? this.bookedSeats.length : 0;
+      const calculatedAvailableSeats = totalSeats - bookedSeatsCount;
+
       let posterBase64: string | undefined = undefined;
       const reader = new FileReader();
 
       reader.onload = () => {
         posterBase64 = reader.result as string;
         this.saveEvent({
-          title,
-          location,
-          date,
-          time,
-          description,
-          email: userEmail,
-          poster: posterBase64,
-          ticketCategories: this.ticketCategories,
-          seatConfiguration: this.seatConfiguration,
-          promo: this.promo,
+          title, location, date, time, description, email: userEmail, poster: posterBase64,
+          ticketCategories: this.ticketCategories, seatConfiguration: this.seatConfiguration, promo: this.promo,
+          availableSeats: calculatedAvailableSeats, // Add availableSeats here
         });
       };
 
@@ -265,15 +299,9 @@ export class Dashboard {
         console.error('Error reading file:', error);
         alert('Could not read event poster file.');
         this.saveEvent({
-          title,
-          location,
-          date,
-          time,
-          description,
-          email: userEmail,
-          ticketCategories: this.ticketCategories,
-          seatConfiguration: this.seatConfiguration,
-          promo: this.promo,
+          title, location, date, time, description, email: userEmail,
+          ticketCategories: this.ticketCategories, seatConfiguration: this.seatConfiguration, promo: this.promo,
+          availableSeats: calculatedAvailableSeats, // Add availableSeats here
         }); // Save without poster
       };
 
@@ -281,15 +309,9 @@ export class Dashboard {
         reader.readAsDataURL(posterFile);
       } else {
         this.saveEvent({
-          title,
-          location,
-          date,
-          time,
-          description,
-          email: userEmail,
-          ticketCategories: this.ticketCategories,
-          seatConfiguration: this.seatConfiguration,
-          promo: this.promo,
+          title, location, date, time, description, email: userEmail,
+          ticketCategories: this.ticketCategories, seatConfiguration: this.seatConfiguration, promo: this.promo,
+          availableSeats: calculatedAvailableSeats, // Add availableSeats here
         });
       }
     } else if (this.activeChoice === 'edit-event') {

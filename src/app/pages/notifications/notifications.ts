@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service'; // Import NotificationService
 
 interface Event {
   id: number | string;
@@ -35,6 +36,7 @@ interface Ticket {
   categoryTable?: Record<string, { name: string; price: number }>;
   appliedPromo?: any;
   discountAmount?: number;
+  isRead: boolean; // Added isRead flag
 }
 
 @Component({
@@ -44,18 +46,21 @@ interface Ticket {
   templateUrl: './notifications.html',
   styleUrl: './notifications.css',
 })
-export class MyTicketsComponent implements OnInit {
+export class NotificationsComponent implements OnInit {
   tickets: Ticket[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService // Inject service
+  ) {}
 
   ngOnInit(): void {
     const raw = localStorage.getItem('pf-tickets');
     if (raw) {
       try {
-        const list: Ticket[] = JSON.parse(raw);
+        let list: Ticket[] = JSON.parse(raw); // Use let to allow modification
 
-        // fallback untuk tiket lama
+        // fallback for older tickets and mark new tickets as read
         this.tickets = list.map((t) => {
           if (!t.seatDetails) {
             t.seatDetails = t.seats.map((s) => ({
@@ -63,8 +68,14 @@ export class MyTicketsComponent implements OnInit {
               typeCode: 'REG',
             }));
           }
+          // Mark as read when displayed in notifications page
+          if (typeof t.isRead === 'undefined' || t.isRead === false) {
+              t.isRead = true;
+          }
           return t;
         });
+        localStorage.setItem('pf-tickets', JSON.stringify(this.tickets)); // Save updated list
+        this.notificationService.updateUnreadCount(); // Update count via service
       } catch {
         this.tickets = [];
       }

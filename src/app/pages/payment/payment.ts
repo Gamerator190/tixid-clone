@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../services/notification.service'; // Import NotificationService
 
-// Define Event interface, consistent with dashboard.ts, checkout.ts, e-ticket.ts
 interface Event {
   id: number | string;
   title: string;
@@ -38,6 +38,7 @@ interface Ticket {
   categoryTable?: Record<string, { name: string; price: number }>;
   appliedPromo?: any;
   discountAmount?: number;
+  isRead: boolean;
 }
 
 @Component({
@@ -54,6 +55,7 @@ export class PaymentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private notificationService: NotificationService, // Inject service
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,9 @@ export class PaymentComponent implements OnInit {
   processPayment() {
     if (!this.ticket) return;
 
+    // Simulate payment success
+    alert(`Payment successful via ${this.paymentOption}!`);
+
     // Perform localStorage operations (copied from CheckoutComponent's bayar method)
     // 1. Save the ticket to 'pf-tickets'
     const existingTicketsRaw = localStorage.getItem('pf-tickets');
@@ -115,6 +120,9 @@ export class PaymentComponent implements OnInit {
       }
     }
 
+    // Update unread count via service
+    this.notificationService.updateUnreadCount();
+
     this.router.navigate(['/home']);
   }
 
@@ -126,10 +134,10 @@ export class PaymentComponent implements OnInit {
   goBack() {
     if (this.ticket) {
       const eventId = this.ticket.event.id;
-      const eventTime = this.ticket.time; // Use ticket.time (event time)
+      const eventTime = this.ticket.time;
       const seatData = this.ticket.seatDetails
         ? this.ticket.seatDetails.map((s) => `${s.seat}:${s.typeCode}`).join(',')
-        : this.ticket.seats.map((s) => `${s}:REG`).join(','); // Fallback logic consistent with checkout
+        : this.ticket.seats.map((s) => `${s}:REG`).join(',');
 
       const categoryTableString = this.ticket.categoryTable
         ? JSON.stringify(this.ticket.categoryTable)
@@ -143,7 +151,7 @@ export class PaymentComponent implements OnInit {
         { categoryTable: categoryTableString },
       ]);
     } else {
-      this.router.navigate(['/home']); // Fallback if no ticket data
+      this.router.navigate(['/home']);
     }
   }
 }

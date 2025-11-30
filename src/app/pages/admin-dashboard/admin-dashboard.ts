@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // Add OnDestroy
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service'; // Import NotificationService
+import { Subscription } from 'rxjs'; // Import Subscription
 
 interface User {
   name: string;
@@ -12,18 +14,51 @@ interface User {
   organization?: string;
 }
 
+interface Event {
+  id: number | string;
+  title: string;
+  date: string;
+  time: string;
+  description: string;
+  location: string;
+  poster?: string;
+  isNew?: boolean;
+  isSpecial?: boolean;
+  promoCode?: string;
+  discount?: number;
+  bookedSeats?: string[];
+  seatConfiguration?: { row: string; category: string }[];
+  availableSeats: number;
+}
+
+interface Ticket {
+  event: Event;
+  poster: string;
+  time: string;
+  seats: string[];
+  total: number;
+  purchaseDate: string;
+  seatDetails?: any[];
+  categoryTable?: Record<string, { name: string; price: number }>;
+  appliedPromo?: any;
+  discountAmount?: number;
+  isRead: boolean;
+}
+
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit {
+export class AdminDashboard implements OnInit, OnDestroy { // Implement OnDestroy
   activeChoice: 'analytics-reports' | 'register' | '' = 'analytics-reports';
 
   // User properties
   userName = 'Admin';
   showMenu = false;
+  unreadCount: number = 0; // Property to hold the unread count
+  private notificationSubscription: Subscription | undefined; // To manage subscription
 
   // Register form properties
   name = '';
@@ -35,7 +70,10 @@ export class AdminDashboard implements OnInit {
   organization = '';
   isLoading = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService // Inject service
+  ) {}
 
   ngOnInit(): void {
     const userJson = localStorage.getItem('pf-current-user');
@@ -50,6 +88,20 @@ export class AdminDashboard implements OnInit {
       this.userName = user.name || 'Admin';
     } catch {
       this.userName = 'Admin';
+    }
+
+    // Subscribe to unread count
+    this.notificationSubscription = this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+
+    // Initial update of the count
+    this.notificationService.updateUnreadCount();
+  }
+
+  ngOnDestroy(): void { // Lifecycle hook to unsubscribe
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 
@@ -163,4 +215,4 @@ export class AdminDashboard implements OnInit {
       this.showChoice('');
     }, 600);
   }
-}
+} // Add missing closing brace for AdminDashboard class
