@@ -144,74 +144,140 @@
 }
 
 /* Lengkungan kiri/kanan – 10 baris */
+.main-floor .seat-row .row-label:first-child {
+  transform-origin: center center;
+}
+.main-floor .seat-row .row-label:last-child {
+  transform-origin: center center;
+}
 .main-floor .seat-row:nth-child(1) .seat-block.left {
   transform: rotate(16deg) translateX(14px);
 }
+.main-floor .seat-row:nth-child(1) .row-label:first-child {
+  transform: rotate(16deg) translateX(14px) translateY(-51px);
+}
 .main-floor .seat-row:nth-child(1) .seat-block.right {
   transform: rotate(-16deg) translateX(-14px);
+}
+.main-floor .seat-row:nth-child(1) .row-label:last-child {
+  transform: rotate(-16deg) translateX(-14px) translateY(-51px);
 }
 
 .main-floor .seat-row:nth-child(2) .seat-block.left {
   transform: rotate(15deg) translateX(12px);
 }
+.main-floor .seat-row:nth-child(2) .row-label:first-child {
+  transform: rotate(15deg) translateX(12px) translateY(-48px);
+}
 .main-floor .seat-row:nth-child(2) .seat-block.right {
   transform: rotate(-15deg) translateX(-12px);
+}
+.main-floor .seat-row:nth-child(2) .row-label:last-child {
+  transform: rotate(-15deg) translateX(-12px) translateY(-48px);
 }
 
 .main-floor .seat-row:nth-child(3) .seat-block.left {
   transform: rotate(14deg) translateX(10px);
 }
+.main-floor .seat-row:nth-child(3) .row-label:first-child {
+  transform: rotate(14deg) translateX(10px) translateY(-45px);
+}
 .main-floor .seat-row:nth-child(3) .seat-block.right {
   transform: rotate(-14deg) translateX(-10px);
+}
+.main-floor .seat-row:nth-child(3) .row-label:last-child {
+  transform: rotate(-14deg) translateX(-10px) translateY(-45px);
 }
 
 .main-floor .seat-row:nth-child(4) .seat-block.left {
   transform: rotate(12deg) translateX(8px);
 }
+.main-floor .seat-row:nth-child(4) .row-label:first-child {
+  transform: rotate(12deg) translateX(10px) translateY(-39px);
+}
 .main-floor .seat-row:nth-child(4) .seat-block.right {
   transform: rotate(-12deg) translateX(-8px);
+}
+.main-floor .seat-row:nth-child(4) .row-label:last-child {
+  transform: rotate(-12deg) translateX(-10px) translateY(-39px);
 }
 
 .main-floor .seat-row:nth-child(5) .seat-block.left {
   transform: rotate(10deg) translateX(6px);
 }
+.main-floor .seat-row:nth-child(5) .row-label:first-child {
+  transform: rotate(10deg) translateX(10px) translateY(-32px);
+}
 .main-floor .seat-row:nth-child(5) .seat-block.right {
   transform: rotate(-10deg) translateX(-6px);
+}
+.main-floor .seat-row:nth-child(5) .row-label:last-child {
+  transform: rotate(-10deg) translateX(-10px) translateY(-32px);
 }
 
 .main-floor .seat-row:nth-child(6) .seat-block.left {
   transform: rotate(8deg) translateX(5px);
 }
+.main-floor .seat-row:nth-child(6) .row-label:first-child {
+  transform: rotate(8deg) translateX(10px) translateY(-26px);
+}
 .main-floor .seat-row:nth-child(6) .seat-block.right {
   transform: rotate(-8deg) translateX(-5px);
+}
+.main-floor .seat-row:nth-child(6) .row-label:last-child {
+  transform: rotate(-8deg) translateX(-10px) translateY(-26px);
 }
 
 .main-floor .seat-row:nth-child(7) .seat-block.left {
   transform: rotate(6deg) translateX(4px);
 }
+.main-floor .seat-row:nth-child(7) .row-label:first-child {
+  transform: rotate(6deg) translateX(9px) translateY(-19px);
+}
 .main-floor .seat-row:nth-child(7) .seat-block.right {
   transform: rotate(-6deg) translateX(-4px);
+}
+.main-floor .seat-row:nth-child(7) .row-label:last-child {
+  transform: rotate(-6deg) translateX(-9px) translateY(-19px);
 }
 
 .main-floor .seat-row:nth-child(8) .seat-block.left {
   transform: rotate(4deg) translateX(3px);
 }
+.main-floor .seat-row:nth-child(8) .row-label:first-child {
+  transform: rotate(4deg) translateX(8px) translateY(-13px);
+}
 .main-floor .seat-row:nth-child(8) .seat-block.right {
   transform: rotate(-4deg) translateX(-3px);
+}
+.main-floor .seat-row:nth-child(8) .row-label:last-child {
+  transform: rotate(-4deg) translateX(-8px) translateY(-13px);
 }
 
 .main-floor .seat-row:nth-child(9) .seat-block.left {
   transform: rotate(2deg) translateX(2px);
 }
+.main-floor .seat-row:nth-child(9) .row-label:first-child {
+  transform: rotate(2deg) translateX(8px) translateY(-7px);
+}
 .main-floor .seat-row:nth-child(9) .seat-block.right {
   transform: rotate(-2deg) translateX(-2px);
+}
+.main-floor .seat-row:nth-child(9) .row-label:last-child {
+  transform: rotate(-2deg) translateX(-8px) translateY(-7px);
 }
 
 .main-floor .seat-row:nth-child(10) .seat-block.left {
   transform: rotate(1deg) translateX(1px);
 }
+.main-floor .seat-row:nth-child(10) .row-label:first-child {
+  transform: rotate(1deg) translateX(8px) translateY(-3px);
+}
 .main-floor .seat-row:nth-child(10) .seat-block.right {
   transform: rotate(-1deg) translateX(-1px);
+}
+.main-floor .seat-row:nth-child(10) .row-label:last-child {
+  transform: rotate(-1deg) translateX(-8px) translateY(-3px);
 }
 
 /* ============ CONTROL ROOM ============ */
@@ -255,7 +321,7 @@
 /* LABEL SAMPING */
 .side-label {
   position: absolute;
-  right: -110px;
+  right: -120px;
   width: 100px;
   border: 2px solid #000;
   padding: 6px;
