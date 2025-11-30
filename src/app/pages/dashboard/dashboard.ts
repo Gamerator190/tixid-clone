@@ -48,6 +48,7 @@ export class Dashboard {
   userEvents: Event[] = [];
   selectedEventId: number | null = null;
   promo: Promo[] = [];
+  bookedSeats: string[] = []; // Added bookedSeats property
 
   ticketCategories = [{ name: 'General Admission', shortName: 'GEN', price: 25000 }];
   seatConfiguration = [
@@ -97,6 +98,7 @@ export class Dashboard {
               { row: 'EE', category: 'GEN' },
             ];
         this.promo = selectedEvent.promo ? JSON.parse(JSON.stringify(selectedEvent.promo)) : [];
+        this.bookedSeats = selectedEvent.bookedSeats || []; // Populate bookedSeats
       }
     } else {
       this.selectedEventId = null;
@@ -119,6 +121,7 @@ export class Dashboard {
         { row: 'EE', category: 'GEN' },
       ];
       this.promo = [];
+      this.bookedSeats = []; // Clear bookedSeats when no event is selected
     }
   }
 
@@ -192,6 +195,11 @@ export class Dashboard {
 
   removePromo(index: number) {
     this.promo.splice(index, 1);
+  }
+
+  // Trigger change detection for seatConfiguration input in app-seat-picker
+  updateSeatConfiguration() {
+    this.seatConfiguration = [...this.seatConfiguration];
   }
 
   submitForm() {

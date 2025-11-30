@@ -178,7 +178,7 @@
         <div class="seat-config-grid">
           <div *ngFor="let config of seatConfiguration" class="form-group">
             <label>{{config.row}}</label>
-            <select [(ngModel)]="config.category" name="seat-row-{{config.row}}">
+            <select [(ngModel)]="config.category" name="seat-row-{{config.row}}" (change)="updateSeatConfiguration()">
               <option *ngFor="let cat of ticketCategories" [value]="cat.shortName">
                 {{cat.name}} ({{cat.shortName}})
               </option>
@@ -220,6 +220,7 @@
         <app-seat-picker
           [ticketCategories]="ticketCategories"
           [seatConfiguration]="seatConfiguration"
+          [bookedSeats]="bookedSeats"
           [showContinueButton]="false"
         >
         </app-seat-picker>
