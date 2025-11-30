@@ -115,8 +115,7 @@ export class PaymentComponent implements OnInit {
       }
     }
 
-    // Redirect to notifications page
-    this.router.navigate(['/notifications']);
+    this.router.navigate(['/home']);
   }
 
   // Helper for displaying currency
