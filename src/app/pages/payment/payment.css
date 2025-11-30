@@ -38,7 +38,6 @@
   font-weight: 700;
   color: #0f1939;
   flex: 1; /* Allow title to take up available space */
-  text-align: center; /* Center the title */
 }
 
 /* Card styles similar to dashboard/checkout */
@@ -100,7 +99,7 @@
   background: #f3f4f6;
 }
 
-.option-group input[type="radio"] {
+.option-group input[type='radio'] {
   /* Hide default radio button */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -115,11 +114,11 @@
   position: relative;
 }
 
-.option-group input[type="radio"]:checked {
+.option-group input[type='radio']:checked {
   border-color: #e3af64;
 }
 
-.option-group input[type="radio"]:checked::before {
+.option-group input[type='radio']:checked::before {
   content: '';
   width: 10px;
   height: 10px;
