@@ -59,7 +59,7 @@ export class LoginComponent {
       // Save info of the currently logged-in user (optional)
       localStorage.setItem('pf-current-user', JSON.stringify(found));
 
-      alert(`Welcome, ${found.name}! (we will redirect to the Home page later)`);
+      // alert(`Welcome, ${found.name}! (we will redirect to the Home page later)`);
 
       const role = found.role || 'attendee';
       if (role === 'organizer') {
