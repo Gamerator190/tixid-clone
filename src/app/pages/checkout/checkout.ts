@@ -187,7 +187,7 @@ export class CheckoutComponent implements OnInit {
     this.router.navigate(['/event', this.event.id]);
   }
 
-  bayar() {
+  pay() {
     if (!this.seatSelections.length) {
       alert('No seats selected.');
       return;
