@@ -1,0 +1,64 @@
+<div class="waitlist-page">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <span class="back-icon">«</span>
+    </button>
+    <div class="title">Waitlist</div>
+  </div>
+
+  <div class="waitlist-container">
+    @if (isWaitlistClosed) {
+    <h2 class="closed-message">Waitlist is Closed</h2>
+    <p>
+      We're sorry, the waitlist for this event has reached its maximum capacity. Please check back
+      later or explore other events.
+    </p>
+    } @else if (isUserOnWaitlist) {
+    <h2 class="success-message">You're on the Waitlist!</h2>
+    <p>
+      Thank you for joining the waitlist. We will notify you at {{ email || phoneNumber }} if
+      tickets become available. There are currently {{ currentWaitlistCount }} people on the
+      waitlist.
+    </p>
+          <button class="waitlist-leave-btn" (click)="leaveWaitlist()">Leave Waitlist</button>    } @else {
+    <h2>Join Waitlist</h2>
+    <p>
+      Please provide your contact details to join the waitlist for this event. There are currently
+      {{ currentWaitlistCount }} out of {{ waitlistCapacity }} spots filled.
+    </p>
+
+    <form (ngSubmit)="submitWaitlist()">
+      <div class="form-group">
+        <label for="email">Email (Optional)</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="your@example.com"
+        />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number (Optional)</label>
+        <input
+          type="tel"
+          id="phone"
+          [(ngModel)]="phoneNumber"
+          name="phoneNumber"
+          placeholder="+1234567890"
+        />
+      </div>
+
+      @if (!email && !phoneNumber) {
+      <p class="error-message">
+        Please provide at least one contact method (email or phone number).
+      </p>
+      }
+
+      <button class="waitlist-primary-btn" type="submit" [disabled]="!email && !phoneNumber">
+        Join Waitlist
+      </button>
+    </form>
+    }
+  </div>
+</div>

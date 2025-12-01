@@ -10,6 +10,7 @@ import { CheckoutComponent } from './pages/checkout/checkout'; // ⬅️ tambahk
 import { ETicketComponent } from './pages/e-ticket/e-ticket';
 import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { WaitlistComponent } from './pages/waitlist-old/waitlist';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
 
   // ⬇ TAMBAHKAN INI
   { path: 'event/:id', component: EventDetailComponent },
+  { path: 'waitlist', component: WaitlistComponent },
 
   // ... route lain
   { path: 'event/:id/:time/seats', component: SeatPickerPageComponent }, // ⬅ ini

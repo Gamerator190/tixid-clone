@@ -166,3 +166,27 @@
 .buy-btn:hover {
   opacity: 0.9;
 }
+
+.waitlist-btn {
+  width: 100%; /* Make it full width */
+  margin-top: 14px; /* Spacing from ticket card */
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  background: #fef2f2; /* Light red background */
+  color: #ef4444; /* Red text color */
+  border: 1px solid #fca5a5; /* Light red border */
+}
+
+.waitlist-btn:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.waitlist-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

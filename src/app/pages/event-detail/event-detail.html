@@ -39,6 +39,10 @@
       {{ event.description || 'There is no description for this event yet.' }}
     </p>
 
+    @if (event.availableSeats > 0) {
     <button class="buy-btn" (click)="buyTicket()">Select Seats</button>
+    } @else {
+    <button class="buy-btn waitlist-btn" (click)="joinWaitlist()">Join Waitlist</button>
+    }
   </div>
 </div>

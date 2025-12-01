@@ -73,4 +73,10 @@ export class EventDetailComponent implements OnInit {
       this.router.navigate(['/event', this.event.id, this.event.time, 'seats']);
     }
   }
+
+  joinWaitlist() {
+    // For now, navigate to a placeholder 'waitlist' page.
+    // This page will need to be implemented separately.
+    this.router.navigate(['/waitlist']);
+  }
 }
