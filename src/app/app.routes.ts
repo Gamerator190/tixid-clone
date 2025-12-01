@@ -10,7 +10,7 @@ import { CheckoutComponent } from './pages/checkout/checkout'; // ⬅️ tambahk
 import { ETicketComponent } from './pages/e-ticket/e-ticket';
 import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { Dashboard } from './pages/dashboard/dashboard';
-import { WaitlistComponent } from './pages/waitlist-old/waitlist';
+import { WaitlistComponent } from './pages/waitlist/waitlist';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
