@@ -52,15 +52,20 @@ interface Ticket {
 
 // ReportData interface (copied from ReportService for consistency)
 interface ReportData {
-  type: 'ticketSales' | 'revenue' | 'seatOccupancy' | 'auditoriumBookings' | 'eventsHosted' | 'utilizationStatistics';
+  type:
+    | 'ticketSales'
+    | 'revenue'
+    | 'seatOccupancy'
+    | 'auditoriumBookings'
+    | 'eventsHosted'
+    | 'utilizationStatistics';
   period: string;
   labels: string[]; // For chart X-axis (e.g., dates, months)
   series: number[]; // For chart Y-axis (e.g., counts, amounts)
-  tableData: { label: string, value: any }[]; // For detailed table display
+  tableData: { label: string; value: any }[]; // For detailed table display
   message?: string; // For insufficient data
   chartType?: ChartType;
 }
-
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -68,7 +73,8 @@ interface ReportData {
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Import and implement AfterViewInit
+export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit {
+  // Import and implement AfterViewInit
   @ViewChild('reportChart') reportChart: ElementRef<HTMLCanvasElement> | undefined;
   private chart: Chart | undefined;
 
@@ -92,7 +98,13 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Imp
   isLoading = false;
 
   // Report properties
-  reportType: 'ticketSales' | 'revenue' | 'seatOccupancy' | 'auditoriumBookings' | 'eventsHosted' | 'utilizationStatistics' = 'auditoriumBookings';
+  reportType:
+    | 'ticketSales'
+    | 'revenue'
+    | 'seatOccupancy'
+    | 'auditoriumBookings'
+    | 'eventsHosted'
+    | 'utilizationStatistics' = 'auditoriumBookings';
   reportingPeriod: 'daily' | 'weekly' | 'monthly' | 'custom' = 'daily'; // Added 'custom'
   startDate: string = ''; // For custom range
   endDate: string = ''; // For custom range
@@ -102,7 +114,7 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Imp
   constructor(
     private router: Router,
     private notificationService: NotificationService,
-    private reportService: ReportService // Inject ReportService
+    private reportService: ReportService, // Inject ReportService
   ) {}
 
   ngOnInit(): void {
@@ -123,7 +135,7 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Imp
     }
 
     // Subscribe to unread count
-    this.notificationSubscription = this.notificationService.unreadCount$.subscribe(count => {
+    this.notificationSubscription = this.notificationService.unreadCount$.subscribe((count) => {
       this.unreadCount = count;
     });
 
@@ -331,9 +343,9 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Imp
         responsive: true,
         scales: {
           y: {
-            beginAtZero: true
-          }
-        }
+            beginAtZero: true,
+          },
+        },
       },
     });
   }
@@ -341,11 +353,11 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit { // Imp
   downloadReportAsPdf() {
     const data = document.querySelector('.report-display');
     if (data) {
-      html2canvas(data as HTMLElement).then(canvas => {
+      html2canvas(data as HTMLElement).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
         const width = pdf.internal.pageSize.getWidth();
-        const height = canvas.height * width / canvas.width;
+        const height = (canvas.height * width) / canvas.width;
         pdf.addImage(contentDataURL, 'PNG', 0, 0, width, height);
         pdf.save('report.pdf');
       });

@@ -95,7 +95,7 @@ export class LoginComponent {
 
       localStorage.setItem('pf-current-user', JSON.stringify(found));
 
-      alert(`Welcome, ${found.name}!`);
+      // alert(`Welcome, ${found.name}!`);
 
       const role = found.role || 'attendee';
       if (role === 'organizer') {
