@@ -197,6 +197,10 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate(['/home']);
   }
 
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
+  }
+
   addCategory() {
     this.ticketCategories.push({ name: '', shortName: '', price: 0 });
   }

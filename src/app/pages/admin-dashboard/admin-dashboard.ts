@@ -126,6 +126,10 @@ export class AdminDashboard implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate(['/home']);
   }
 
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
+  }
+
   openNotifications() {
     this.router.navigate(['/notifications']);
   }

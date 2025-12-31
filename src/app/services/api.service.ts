@@ -29,6 +29,14 @@ export class ApiService {
   logout(): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/logout`, {}, this.getHeaders());
   }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email }, this.getHeaders());
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/reset-password/${token}`, { password }, this.getHeaders());
+  }
   
   checkAuth(): Observable<any> {
     return this.http.get(`${this.baseUrl}/auth/check-auth`, this.getHeaders());
