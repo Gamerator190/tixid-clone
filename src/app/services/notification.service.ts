@@ -1,22 +1,6 @@
-interface Event {
-  id: number | string;
-  title: string;
-  date: string;
-  time: string;
-  description: string;
-  location: string;
-  poster?: string;
-  isNew?: boolean;
-  isSpecial?: boolean;
-  promoCode?: string;
-  discount?: number;
-  bookedSeats?: string[];
-  seatConfiguration?: { row: string; category: string }[];
-  availableSeats: number;
-}
-
 interface Ticket {
-  event: Event;
+  eventId: string;
+  eventTitle: string;
   poster: string;
   time: string;
   seats: string[];
@@ -27,6 +11,7 @@ interface Ticket {
   appliedPromo?: any;
   discountAmount?: number;
   isRead: boolean;
+  _id?: string; // MongoDB ID for the ticket document itself
 }
 
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core'; 
@@ -40,6 +25,9 @@ export class NotificationService {
   private _unreadCount = new BehaviorSubject<number>(0);
   public readonly unreadCount$: Observable<number> = this._unreadCount.asObservable();
 
+  private _tickets = new BehaviorSubject<Ticket[]>([]); // New BehaviorSubject for tickets
+  public readonly tickets$: Observable<Ticket[]> = this._tickets.asObservable(); // New observable for tickets
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { 
     if (isPlatformBrowser(this.platformId)) { 
       this.updateUnreadCount(); 
@@ -52,16 +40,20 @@ export class NotificationService {
       if (rawTickets) {
         try {
           const tickets: Ticket[] = JSON.parse(rawTickets);
+          this._tickets.next(tickets); // Update the tickets stream
           const count = tickets.filter(t => !t.isRead).length;
           this._unreadCount.next(count);
         } catch (e) {
-          console.error('Error parsing tickets for unread count:', e);
+          console.error('Error parsing tickets for notifications:', e); // Updated error message
+          this._tickets.next([]);
           this._unreadCount.next(0);
         }
       } else {
+        this._tickets.next([]);
         this._unreadCount.next(0);
       }
     } else {
+      this._tickets.next([]);
       this._unreadCount.next(0);
     }
   }

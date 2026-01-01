@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,17 +33,23 @@ export class CheckoutComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    // Check for state first
+    if (history.state && history.state.categoryTable) {
+      this.categoryTable = history.state.categoryTable;
+    } else {
+        // Fallback or error for direct navigation
+        alert('Error: Category data not found. Please select seats again.');
+        this.router.navigate(['/home']);
+        return;
+    }
+
     const eventId = this.route.snapshot.paramMap.get('id');
     this.time = String(this.route.snapshot.paramMap.get('time'));
     const seatsParam = this.route.snapshot.paramMap.get('seats') || '';
-    const categoryTableString = this.route.snapshot.paramMap.get('categoryTable');
-
-    if (categoryTableString) {
-      this.categoryTable = JSON.parse(categoryTableString);
-    }
 
     if (seatsParam) {
       this.seatSelections = seatsParam
@@ -69,6 +75,7 @@ export class CheckoutComponent implements OnInit {
         if (res.success) {
           this.event = res.event;
           this.updateTotal();
+          this.cdr.detectChanges();
         } else {
           alert('Event data not found');
           this.router.navigate(['/home']);
@@ -165,7 +172,8 @@ export class CheckoutComponent implements OnInit {
     }
 
     const ticket = {
-      event: this.event,
+      eventId: this.event._id, // Pass ID instead of whole object
+      eventTitle: this.event.title, // Pass title for display
       poster: this.event.poster,
       time: this.time,
       seats: this.seatSelections.map((s) => s.seat),

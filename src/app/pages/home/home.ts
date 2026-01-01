@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
@@ -39,7 +39,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     private notificationService: NotificationService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   events: Event[] = [];
@@ -63,6 +64,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.apiService.getEvents().subscribe({
       next: (res) => {
         if (res.success) {
+          // Also save the raw events to localStorage for other components to use
+          localStorage.setItem('pf-events', JSON.stringify(res.events));
+
           this.events = res.events.map((event: any) => {
             const totalSeats = event.seatConfiguration ? event.seatConfiguration.length * 30 : 0;
             const bookedSeatsCount = event.bookedSeats ? event.bookedSeats.length : 0;
@@ -72,6 +76,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               availableSeats: totalSeats - bookedSeatsCount,
             };
           });
+          this.cdr.detectChanges(); // Manually trigger change detection
         }
       },
       error: (err) => {

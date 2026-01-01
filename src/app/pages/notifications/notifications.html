@@ -12,17 +12,17 @@
   </div>
 
   <div class="tickets-list" *ngIf="tickets.length">
-    <div class="ticket-card" *ngFor="let t of tickets; let i = index" (click)="openTicket(i)">
+    <div class="ticket-card" *ngFor="let t of tickets; let i = index" (click)="openTicket(t)">
       <div class="poster-wrap">
-        <img [src]="t.event.poster || 'assets/placeholder.jpg'" [alt]="t.event.title" />
+        <img [src]="t.poster || 'assets/placeholder.jpg'" [alt]="t.eventTitle" />
       </div>
 
       <div class="ticket-info">
-        <div class="event-title">{{ t.event.title }}</div>
+        <div class="event-title">{{ t.eventTitle }}</div>
 
         <div class="row">
-          <span class="label">Event Date</span>
-          <span class="value">{{ t.event.date }}</span>
+          <span class="label">Purchase Date</span>
+          <span class="value">{{ t.purchaseDate | date:'mediumDate' }}</span>
         </div>
 
         <div class="row">

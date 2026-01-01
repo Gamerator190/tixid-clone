@@ -1,3 +1,8 @@
+<div class="loading-container" *ngIf="!event">
+  <div class="spinner"></div>
+  <p>Loading Event...</p>
+</div>
+
 <div class="event-detail-page" *ngIf="event">
   <div class="poster-container">
     <img class="poster" [src]="event.poster" [alt]="event.title" />

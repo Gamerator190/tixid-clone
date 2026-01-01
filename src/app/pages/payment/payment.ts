@@ -40,14 +40,27 @@ export class PaymentComponent implements OnInit {
   processPayment() {
     if (!this.ticket) return;
 
-    const ticketData = {
-      ...this.ticket,
-      eventId: this.ticket.event._id,
-    };
-
-    this.apiService.createTicket(ticketData).subscribe({
+    // The ticket object already contains eventId, so we can pass it directly.
+    this.apiService.createTicket(this.ticket).subscribe({
       next: (res) => {
         if (res.success) {
+          // --- BUG FIX: Add new ticket to localStorage ---
+          const rawTickets = localStorage.getItem('pf-tickets');
+          let tickets = [];
+          if (rawTickets) {
+            try {
+              tickets = JSON.parse(rawTickets);
+            } catch (e) {
+              console.error('Could not parse existing tickets, starting fresh.');
+            }
+          }
+          // The response from createTicket should be the new ticket object.
+          // We'll add the flat eventTitle to it for consistency.
+          const newTicketForStorage = { ...res.ticket, eventTitle: this.ticket.eventTitle };
+          tickets.push(newTicketForStorage);
+          localStorage.setItem('pf-tickets', JSON.stringify(tickets));
+          // --- END BUG FIX ---
+
           alert(`Payment successful via ${this.paymentOption}!`);
           this.notificationService.updateUnreadCount();
           this.router.navigate(['/home']);
@@ -67,23 +80,17 @@ export class PaymentComponent implements OnInit {
 
   goBack() {
     if (this.ticket) {
-      const eventId = this.ticket.event._id;
-      const eventTime = this.ticket.time;
-      const seatData = this.ticket.seatDetails
-        ? this.ticket.seatDetails.map((s: any) => `${s.seat}:${s.typeCode}`).join(',')
-        : this.ticket.seats.map((s: any) => `${s}:REG`).join(',');
-
-      const categoryTableString = this.ticket.categoryTable
-        ? JSON.stringify(this.ticket.categoryTable)
-        : '';
-
-      this.router.navigate([
-        '/checkout',
-        eventId,
-        eventTime,
-        seatData,
-        { categoryTable: categoryTableString },
-      ]);
+      this.router.navigate(
+        [
+          '/checkout',
+          this.ticket.eventId,
+          this.ticket.time,
+          this.ticket.seats.join(','),
+        ],
+        {
+          state: { categoryTable: this.ticket.categoryTable } // Correctly pass state back
+        }
+      );
     } else {
       this.router.navigate(['/home']);
     }

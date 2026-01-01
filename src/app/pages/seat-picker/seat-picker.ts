@@ -134,6 +134,18 @@ export class SeatPickerComponent implements OnChanges {
     return value.toLocaleString('id-ID');
   }
 
+  selectAllSeats() {
+    const availableSeats = new Set<string>();
+    for (const row of this.seats) {
+      for (const seat of row) {
+        if (!seat.booked) {
+          availableSeats.add(seat.id);
+        }
+      }
+    }
+    this.selectedSeats = [...availableSeats];
+  }
+
   continue() {
     if (!this.selectedSeats.length) {
       alert('Please choose at least 1 seat first, okay? 😊');

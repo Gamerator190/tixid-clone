@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
@@ -17,6 +17,7 @@ export class EventDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +39,7 @@ export class EventDetailComponent implements OnInit {
             id: foundEvent._id,
             availableSeats: totalSeats - bookedSeatsCount,
           };
+          this.cdr.detectChanges(); // Manually trigger change detection
         } else {
           alert('Event not found');
           this.router.navigate(['/home']);

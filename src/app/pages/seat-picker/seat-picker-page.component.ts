@@ -11,7 +11,7 @@ import { SeatPickerComponent } from './seat-picker';
   styleUrls: ['./seat-picker-page.component.css'],
 })
 export class SeatPickerPageComponent implements OnInit {
-  eventId!: number;
+  eventId: string | null = null;
   time!: string;
   ticketCategories: any[] = [];
   seatConfiguration: any[] = [];
@@ -23,19 +23,31 @@ export class SeatPickerPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.eventId = Number(this.route.snapshot.paramMap.get('id'));
+    this.eventId = this.route.snapshot.paramMap.get('id');
     this.time = String(this.route.snapshot.paramMap.get('time'));
+
+    if (!this.eventId) {
+      alert('Error: Event ID is missing.');
+      this.router.navigate(['/home']);
+      return;
+    }
 
     const eventsJson = localStorage.getItem('pf-events');
     if (eventsJson) {
       const events = JSON.parse(eventsJson);
-      const currentEvent = events.find((event: any) => event.id === this.eventId);
+      const currentEvent = events.find((event: any) => event.id === this.eventId || event._id === this.eventId);
 
       if (currentEvent) {
         this.ticketCategories = currentEvent.ticketCategories || [];
         this.seatConfiguration = currentEvent.seatConfiguration || [];
         this.bookedSeats = currentEvent.bookedSeats || [];
+      } else {
+        alert('Error fetching event data from local storage.');
+        this.router.navigate(['/home']);
       }
+    } else {
+        alert('Error fetching event data. No local event cache found.');
+        this.router.navigate(['/home']);
     }
   }
 
@@ -44,12 +56,16 @@ export class SeatPickerPageComponent implements OnInit {
   }
 
   handleContinue({ seatData, categoryTable }: { seatData: string; categoryTable: any }) {
-    this.router.navigate([
-      '/checkout',
-      this.eventId,
-      this.time,
-      seatData,
-      { categoryTable: JSON.stringify(categoryTable) },
-    ]);
+    this.router.navigate(
+      [
+        '/checkout',
+        this.eventId,
+        this.time,
+        seatData,
+      ],
+      {
+        state: { categoryTable: categoryTable }
+      }
+    );
   }
 }

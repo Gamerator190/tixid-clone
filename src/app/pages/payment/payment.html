@@ -6,7 +6,7 @@
 
   <div class="card" *ngIf="ticket">
     <div class="card-body">
-      <h2 class="card-title">Event: {{ ticket.event.title }}</h2>
+      <h2 class="card-title">Event: {{ ticket.eventTitle }}</h2>
       <p class="card-subtitle">Total to pay: <strong>Rp {{ formatRupiah(ticket.total) }}</strong></p>
 
       <div class="payment-options">
