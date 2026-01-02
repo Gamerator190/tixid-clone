@@ -294,9 +294,9 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
         time,
         description,
         email: userEmail,
-        ticketCategories: this.ticketCategories,
-        seatConfiguration: this.seatConfiguration,
-        promo: this.promo,
+        ticketCategories: [{ name: 'General', shortName: 'GEN', price: 25000, maxTickets: 0 }],
+        seatConfiguration: [],
+        promo: [],
         isNew: true,
       };
 
