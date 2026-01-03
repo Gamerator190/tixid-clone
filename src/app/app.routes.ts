@@ -29,7 +29,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: Dashboard, canActivate: [OrganizerGuard] },
 
   { path: 'event/:id', component: EventDetailComponent },
-  { path: 'waitlist', component: WaitlistComponent },
+  { path: 'waitlist/:id', component: WaitlistComponent },
 
   { path: 'event/:id/:time/seats', component: SeatPickerPageComponent },
   { path: 'notifications', component: NotificationsComponent }, 

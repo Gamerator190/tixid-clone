@@ -7,17 +7,21 @@
   </div>
 
   <div class="waitlist-container">
+    <div class="event-info" *ngIf="eventTitle">
+      <h3>{{ eventTitle }}</h3>
+    </div>
+
     @if (isWaitlistClosed) {
     <h2 class="closed-message">Waitlist is Closed</h2>
     <p>
-      We're sorry, the waitlist for this event has reached its maximum capacity. Please check back
+      We're sorry, the waitlist for this event has reached its maximum capacity of {{ waitlistCapacity }} people. Please check back
       later or explore other events.
     </p>
     } @else if (isUserOnWaitlist) {
     <h2 class="success-message">You're on the Waitlist!</h2>
     <p>
       Thank you for joining the waitlist. We will notify you at {{ email || phoneNumber }} if
-      tickets become available. There are currently {{ currentWaitlistCount }} people on the
+      tickets become available. There are currently {{ currentWaitlistCount }} out of {{ waitlistCapacity }} people on the
       waitlist.
     </p>
           <button class="waitlist-leave-btn" (click)="leaveWaitlist()">Leave Waitlist</button>    } @else {

@@ -64,6 +64,8 @@ export class EventDetailComponent implements OnInit {
   }
 
   joinWaitlist() {
-    this.router.navigate(['/waitlist']);
+    if (this.event) {
+      this.router.navigate(['/waitlist', this.event.id]);
+    }
   }
 }

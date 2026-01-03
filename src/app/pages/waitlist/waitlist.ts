@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
 @Component({
@@ -15,16 +15,44 @@ export class WaitlistComponent implements OnInit {
   email: string = '';
   phoneNumber: string = '';
   
-  waitlistCapacity: number = 5; 
+  waitlistCapacity: number = 50;  // Default capacity
   currentWaitlistCount: number = 0;
-  isUserOnWaitlist: boolean = false; 
+  isUserOnWaitlist: boolean = false;
+  eventId: string = '';
+  eventTitle: string = '';
 
-  // TODO: This should be passed dynamically to the component
-  private eventId = '663a3b3c4b5b6c7d8e9f0a1b'; 
-
-  constructor(private router: Router, private apiService: ApiService, @Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private apiService: ApiService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    // Get eventId from route parameter
+    this.eventId = this.route.snapshot.paramMap.get('id') || '';
+    
+    if (!this.eventId) {
+      alert('Event ID is missing.');
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    // Fetch event details to get the event title
+    this.apiService.getEventById(this.eventId).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.eventTitle = res.event.title;
+          // Set a reasonable default capacity based on event size
+          this.waitlistCapacity = 50;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch event details', err);
+      }
+    });
+
     this.fetchWaitlistStatus();
   }
 
@@ -53,6 +81,7 @@ export class WaitlistComponent implements OnInit {
               }
             }
           }
+          this.cdr.detectChanges();
         }
       },
       error: (err) => {
